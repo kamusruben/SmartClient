@@ -12,7 +12,12 @@
 }
 *{
   font-family: 'Raleway';
-  font-size:16px
+}
+.number{
+  font-family: Helvetica;
+}
+.container-fluid{
+  max-width: 90vw !important;
 }
 html, body {
   height: 100%;
@@ -36,4 +41,22 @@ html, body {
   background-position-y: 6px;
   padding-left: 36px;
   line-height: 1;
+}
+
+/* AG GRID*/
+.ag-root-wrapper{
+  border-radius: 10px;
+}
+.ag-header{
+  border-width: 0px;
+}
+.ag-cell-label-container{
+  font-family: 'Raleway';
+  font-size: 13px !important;
+  color: #A1A1A1;
+  font-weight: normal !important;
+}
+.ag-cell-value{
+  font-family: 'Raleway-Medium';
+  font-size: 18px;
 }

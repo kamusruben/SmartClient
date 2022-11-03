@@ -1,4 +1,4 @@
-import { Pedido } from './../../app/pedido';
+import { Pedido } from '../util/custom-data-types/pedido';
 import {ColDef} from "ag-grid-community";
 
 export class Mockup {
@@ -796,10 +796,23 @@ export class Mockup {
   getColDefs(){
     this.pedidos = this.getPedidos();
     this.cols = Object.getOwnPropertyNames(this.pedidos[0]);
+    let that = this;
     this.cols.forEach(item => {
-      let def = {field: item};
+      let def = {
+        field: item, sortable: true, editable: this.getEditable(item),
+        cellEditor: 'agRichSelectCellEditor',
+        filter: 'agDateColumnFilter',
+      };
       this.colDefs.push(def);
     });
     return this.colDefs;
+  }
+
+  getEditable(colName: string){
+    let editables = ['comentarios','cajas'];
+    if(editables.find(item => item == colName) != null){
+      return true;
+    }
+    return false;
   }
 }
