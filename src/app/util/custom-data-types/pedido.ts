@@ -6,7 +6,7 @@ export interface Pedido {
   refRep: string,
   fcl: number,
   tamanioContenido: string,
-  unidadContenido: string,
+  unidadContenido?: string,
   prefactAduana: string,
   facturaSRI: string,
   sec: number,
@@ -22,7 +22,7 @@ export interface Pedido {
   carga: Date,
   embarqueTentativo: Date,
   embarqueReal: Date,
-  fechaFacturación: Date,
+  fechaFacturacion: Date,
   naviera: string,
   buque: string,
   numeroContenedor: string,
@@ -33,5 +33,5 @@ export interface Pedido {
   transportistaTerrestre: string,
   valorFleteTerrestre: number,
   puertoOrigen: string,
-  valorFleteMarítimo: number
+  valorFleteMaritimo: number
 }

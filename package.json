@@ -20,9 +20,12 @@
     "@angular/material": "^12.2.13",
     "@angular/animations": "~12.2.0",
     "@angular/cdk": "^12.2.13",
+    "alertifyjs": "^1.13.1",
     "ag-grid-angular": "^28.2.0",
     "ag-grid-community": "^28.2.0",
     "bootstrap": "^5.2.2",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.37",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

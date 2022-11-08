@@ -1,8 +1,11 @@
 import { Pedido } from '../util/custom-data-types/pedido';
 import {ColDef} from "ag-grid-community";
+import * as moment from 'moment';
+import {AgGridCdt} from "../util/custom-data-types/ag-grid-cdt";
 
 export class Mockup {
   private pedidos: Pedido[];
+  private config: ColDef[];
   private colDefs: ColDef[];
   private cols: string[];
 
@@ -21,7 +24,7 @@ export class Mockup {
         refRep: 'RH-1576-13',
         fcl: 13,
         tamanioContenido: '20 PIES',
-        unidadContenido: 'PIES',
+        // unidadContenido: 'PIES',
         prefactAduana: '5104',
         facturaSRI: '001-106-000005104',
         sec: 5,
@@ -37,7 +40,7 @@ export class Mockup {
         carga: new Date(),
         embarqueTentativo: new Date(),
         embarqueReal: new Date(),
-        fechaFacturación: new Date(),
+        fechaFacturacion: new Date(),
         naviera: 'CMA CGM',
         buque: 'CMA CGM ARKANSAS',
         numeroContenedor: 'FCIU2903823  ',
@@ -48,7 +51,7 @@ export class Mockup {
         transportistaTerrestre: 'TRANSCARNA',
         valorFleteTerrestre: 439,
         puertoOrigen: 'GUAYAQUIL',
-        valorFleteMarítimo: 0
+        valorFleteMaritimo: 0
       },
       {
         planta: 'PLANTA STO DOMINGO',
@@ -58,7 +61,7 @@ export class Mockup {
         refRep: 'EB-3300-1',
         fcl: 1,
         tamanioContenido: '40 PIES',
-        unidadContenido: 'PIES',
+        // unidadContenido: 'PIES',
         prefactAduana: '5094',
         facturaSRI: '001-106-000005094',
         sec: 72,
@@ -74,7 +77,7 @@ export class Mockup {
         carga: new Date(),
         embarqueTentativo: new Date(),
         embarqueReal: new Date(),
-        fechaFacturación: new Date(),
+        fechaFacturacion: new Date(),
         naviera: 'HAMBURG SUD',
         buque: 'ALGOL',
         numeroContenedor: 'TLLU7837470',
@@ -85,7 +88,7 @@ export class Mockup {
         transportistaTerrestre: 'AVALCARGA',
         valorFleteTerrestre: 600,
         puertoOrigen: 'GUAYAQUIL',
-        valorFleteMarítimo: 0
+        valorFleteMaritimo: 0
       },
       {
         planta: 'PLANTA STO DOMINGO',
@@ -95,7 +98,7 @@ export class Mockup {
         refRep: 'EB-3301-1',
         fcl: 1,
         tamanioContenido: '40 PIES',
-        unidadContenido: 'PIES',
+        // unidadContenido: 'PIES',
         prefactAduana: '5108',
         facturaSRI: '001-106-000005108',
         sec: 73,
@@ -111,7 +114,7 @@ export class Mockup {
         carga: new Date(),
         embarqueTentativo: new Date(),
         embarqueReal: new Date(),
-        fechaFacturación: new Date(),
+        fechaFacturacion: new Date(),
         naviera: 'HAMBURG SUD',
         buque: 'ARSOS',
         numeroContenedor: 'RFCU4035839',
@@ -122,7 +125,7 @@ export class Mockup {
         transportistaTerrestre: 'TRANSCARNA',
         valorFleteTerrestre: 380,
         puertoOrigen: 'GUAYAQUIL',
-        valorFleteMarítimo: 0
+        valorFleteMaritimo: 0
       },
       {
         planta: 'PLANTA STO DOMINGO',
@@ -132,7 +135,7 @@ export class Mockup {
         refRep: 'RH-1614-2',
         fcl: 2,
         tamanioContenido: '20 PIES',
-        unidadContenido: 'PIES',
+        // unidadContenido: 'PIES',
         prefactAduana: '5099',
         facturaSRI: '001-106-000005099',
         sec: 10,
@@ -148,7 +151,7 @@ export class Mockup {
         carga: new Date(),
         embarqueTentativo: new Date(),
         embarqueReal: new Date(),
-        fechaFacturación: new Date(),
+        fechaFacturacion: new Date(),
         naviera: 'CMA CGM',
         buque: 'CMA CGM ARKANSAS',
         numeroContenedor: 'CMAU0981837',
@@ -159,7 +162,7 @@ export class Mockup {
         transportistaTerrestre: 'TRANSCARNA',
         valorFleteTerrestre: 681,
         puertoOrigen: 'GUAYAQUIL',
-        valorFleteMarítimo: 0
+        valorFleteMaritimo: 0
       },
       {
         planta: 'PLANTA STO DOMINGO',
@@ -169,7 +172,7 @@ export class Mockup {
         refRep: 'RH-1631-2',
         fcl: 2,
         tamanioContenido: '20 PIES',
-        unidadContenido: 'PIES',
+        // unidadContenido: 'PIES',
         prefactAduana: '5100',
         facturaSRI: '001-106-000005100',
         sec: 4,
@@ -185,7 +188,7 @@ export class Mockup {
         carga: new Date(),
         embarqueTentativo: new Date(),
         embarqueReal: new Date(),
-        fechaFacturación: new Date(),
+        fechaFacturacion: new Date(),
         naviera: 'CMA CGM',
         buque: 'CMA CGM ARKANSAS',
         numeroContenedor: 'TRHU1062979',
@@ -196,7 +199,7 @@ export class Mockup {
         transportistaTerrestre: 'AVALCARGA',
         valorFleteTerrestre: 681,
         puertoOrigen: 'GUAYAQUIL',
-        valorFleteMarítimo: 0
+        valorFleteMaritimo: 0
       },
       {
         planta: 'PLANTA STO DOMINGO',
@@ -206,7 +209,7 @@ export class Mockup {
         refRep: 'RH-1638-10',
         fcl: 10,
         tamanioContenido: '20 PIES',
-        unidadContenido: 'PIES',
+        // unidadContenido: 'PIES',
         prefactAduana: '5107',
         facturaSRI: '001-106-000005107',
         sec: 12,
@@ -222,7 +225,7 @@ export class Mockup {
         carga: new Date(),
         embarqueTentativo: new Date(),
         embarqueReal: new Date(),
-        fechaFacturación: new Date(),
+        fechaFacturacion: new Date(),
         naviera: 'CMA CGM',
         buque: 'CMA CGM ARKANSAS',
         numeroContenedor: 'CMAU0723961',
@@ -233,7 +236,7 @@ export class Mockup {
         transportistaTerrestre: 'TRANSCARNA',
         valorFleteTerrestre: 681,
         puertoOrigen: 'GUAYAQUIL',
-        valorFleteMarítimo: 0
+        valorFleteMaritimo: 0
       },
       {
         planta: 'PLANTA STO DOMINGO',
@@ -243,7 +246,7 @@ export class Mockup {
         refRep: 'EB-3614-1',
         fcl: 1,
         tamanioContenido: '40 PIES',
-        unidadContenido: 'PIES',
+        // unidadContenido: 'PIES',
         prefactAduana: '5101',
         facturaSRI: '001-106-000005101',
         sec: 74,
@@ -259,7 +262,7 @@ export class Mockup {
         carga: new Date(),
         embarqueTentativo: new Date(),
         embarqueReal: new Date(),
-        fechaFacturación: new Date(),
+        fechaFacturacion: new Date(),
         naviera: 'CMA CGM',
         buque: 'ALGOL',
         numeroContenedor: 'TGBU8729571',
@@ -270,7 +273,7 @@ export class Mockup {
         transportistaTerrestre: 'TRANSCARNA',
         valorFleteTerrestre: 600,
         puertoOrigen: 'GUAYAQUIL',
-        valorFleteMarítimo: 0
+        valorFleteMaritimo: 0
       },
       {
         planta: 'PLANTA STO DOMINGO',
@@ -280,7 +283,7 @@ export class Mockup {
         refRep: 'EB-3634-1',
         fcl: 1,
         tamanioContenido: '40 PIES',
-        unidadContenido: 'PIES',
+        // unidadContenido: 'PIES',
         prefactAduana: '5097',
         facturaSRI: '001-106-000005097',
         sec: 75,
@@ -296,7 +299,7 @@ export class Mockup {
         carga: new Date(),
         embarqueTentativo: new Date(),
         embarqueReal: new Date(),
-        fechaFacturación: new Date(),
+        fechaFacturacion: new Date(),
         naviera: 'A.HARTRODT ECUADOR LOGISTICS S.A.',
         buque: 'ALGOL',
         numeroContenedor: 'CSNU7490532  ',
@@ -307,7 +310,7 @@ export class Mockup {
         transportistaTerrestre: 'TRANSCARNA',
         valorFleteTerrestre: 600,
         puertoOrigen: 'GUAYAQUIL',
-        valorFleteMarítimo: 0
+        valorFleteMaritimo: 0
       },
       {
         planta: 'PLANTA STO DOMINGO',
@@ -317,7 +320,7 @@ export class Mockup {
         refRep: 'EB-3657-1',
         fcl: 1,
         tamanioContenido: '40 PIES',
-        unidadContenido: 'PIES',
+        // unidadContenido: 'PIES',
         prefactAduana: '5105',
         facturaSRI: '001-106-000005105',
         sec: 76,
@@ -333,7 +336,7 @@ export class Mockup {
         carga: new Date(),
         embarqueTentativo: new Date(),
         embarqueReal: new Date(),
-        fechaFacturación: new Date(),
+        fechaFacturacion: new Date(),
         naviera: 'SEABOARD MARINE',
         buque: 'ARSOS',
         numeroContenedor: 'SMLU7855520',
@@ -344,7 +347,7 @@ export class Mockup {
         transportistaTerrestre: 'ADETRANSCORP',
         valorFleteTerrestre: 380,
         puertoOrigen: 'GUAYAQUIL',
-        valorFleteMarítimo: 0
+        valorFleteMaritimo: 0
       },
       {
         planta: 'PLANTA STO DOMINGO',
@@ -354,7 +357,7 @@ export class Mockup {
         refRep: 'EB-3657-1',
         fcl: 1,
         tamanioContenido: '40 PIES',
-        unidadContenido: 'PIES',
+        // unidadContenido: 'PIES',
         prefactAduana: '5105',
         facturaSRI: '001-106-000005105',
         sec: 76,
@@ -370,7 +373,7 @@ export class Mockup {
         carga: new Date(),
         embarqueTentativo: new Date(),
         embarqueReal: new Date(),
-        fechaFacturación: new Date(),
+        fechaFacturacion: new Date(),
         naviera: 'SEABOARD MARINE',
         buque: 'ARSOS',
         numeroContenedor: 'SMLU7855520',
@@ -381,7 +384,7 @@ export class Mockup {
         transportistaTerrestre: 'ADETRANSCORP',
         valorFleteTerrestre: 380,
         puertoOrigen: 'GUAYAQUIL',
-        valorFleteMarítimo: 0
+        valorFleteMaritimo: 0
       },
       {
         planta: 'PLANTA STO DOMINGO',
@@ -391,7 +394,7 @@ export class Mockup {
         refRep: 'GK-1074-1',
         fcl: 1,
         tamanioContenido: '20 PIES',
-        unidadContenido: 'PIES',
+        // unidadContenido: 'PIES',
         prefactAduana: '5093',
         facturaSRI: '001-106-000005093',
         sec: 1,
@@ -407,7 +410,7 @@ export class Mockup {
         carga: new Date(),
         embarqueTentativo: new Date(),
         embarqueReal: new Date(),
-        fechaFacturación: new Date(),
+        fechaFacturacion: new Date(),
         naviera: 'KUEHNE & NAGEL',
         buque: 'DIMITRIS C',
         numeroContenedor: 'HLBU1451111',
@@ -418,7 +421,7 @@ export class Mockup {
         transportistaTerrestre: 'TRANSCARNA',
         valorFleteTerrestre: 380,
         puertoOrigen: 'GUAYAQUIL',
-        valorFleteMarítimo: 0
+        valorFleteMaritimo: 0
       },
       {
         planta: 'PLANTA STO DOMINGO',
@@ -428,7 +431,7 @@ export class Mockup {
         refRep: 'EB-3708-1',
         fcl: 1,
         tamanioContenido: '40 PIES',
-        unidadContenido: 'PIES',
+        // unidadContenido: 'PIES',
         prefactAduana: '5106',
         facturaSRI: '001-106-000005106',
         sec: 77,
@@ -444,7 +447,7 @@ export class Mockup {
         carga: new Date(),
         embarqueTentativo: new Date(),
         embarqueReal: new Date(),
-        fechaFacturación: new Date(),
+        fechaFacturacion: new Date(),
         naviera: 'SEABOARD MARINE',
         buque: 'ARSOS',
         numeroContenedor: 'SMLU7970755   ',
@@ -455,7 +458,7 @@ export class Mockup {
         transportistaTerrestre: 'TRANSCARNA',
         valorFleteTerrestre: 380,
         puertoOrigen: 'GUAYAQUIL',
-        valorFleteMarítimo: 0
+        valorFleteMaritimo: 0
       },
       {
         planta: 'PLANTA STO DOMINGO',
@@ -465,7 +468,7 @@ export class Mockup {
         refRep: 'EB-3740-1',
         fcl: 1,
         tamanioContenido: '40 PIES',
-        unidadContenido: 'PIES',
+        // unidadContenido: 'PIES',
         prefactAduana: '5098',
         facturaSRI: '001-106-000005098',
         sec: 78,
@@ -481,7 +484,7 @@ export class Mockup {
         carga: new Date(),
         embarqueTentativo: new Date(),
         embarqueReal: new Date(),
-        fechaFacturación: new Date(),
+        fechaFacturacion: new Date(),
         naviera: 'KING OCEAN',
         buque: 'ALGOL',
         numeroContenedor: 'KOSU4921974',
@@ -492,7 +495,7 @@ export class Mockup {
         transportistaTerrestre: 'ADETRANSCORP',
         valorFleteTerrestre: 600,
         puertoOrigen: 'GUAYAQUIL',
-        valorFleteMarítimo: 0
+        valorFleteMaritimo: 0
       },
       {
         planta: 'PLANTA STO DOMINGO',
@@ -502,7 +505,7 @@ export class Mockup {
         refRep: 'EB-3741-1',
         fcl: 1,
         tamanioContenido: '40 PIES',
-        unidadContenido: 'PIES',
+        // unidadContenido: 'PIES',
         prefactAduana: '5102',
         facturaSRI: '001-106-000005102',
         sec: 79,
@@ -518,7 +521,7 @@ export class Mockup {
         carga: new Date(),
         embarqueTentativo: new Date(),
         embarqueReal: new Date(),
-        fechaFacturación: new Date(),
+        fechaFacturacion: new Date(),
         naviera: 'KING OCEAN',
         buque: 'ALGOL',
         numeroContenedor: 'KOSU4924084',
@@ -529,7 +532,7 @@ export class Mockup {
         transportistaTerrestre: 'ADETRANSCORP',
         valorFleteTerrestre: 600,
         puertoOrigen: 'GUAYAQUIL',
-        valorFleteMarítimo: 0
+        valorFleteMaritimo: 0
       },
       {
         planta: 'PLANTA STO DOMINGO',
@@ -539,7 +542,7 @@ export class Mockup {
         refRep: 'GK-1073-1',
         fcl: 1,
         tamanioContenido: '20 PIES',
-        unidadContenido: 'PIES',
+        // unidadContenido: 'PIES',
         prefactAduana: '5110',
         facturaSRI: '',
         sec: 2,
@@ -555,7 +558,7 @@ export class Mockup {
         carga: new Date(),
         embarqueTentativo: new Date(),
         embarqueReal: new Date(),
-        fechaFacturación: new Date(),
+        fechaFacturacion: new Date(),
         naviera: 'TRANSASIA PACIFIC S.A.',
         buque: 'MSC VAISHNAVI R.',
         numeroContenedor: 'TEMU2819370',
@@ -566,7 +569,7 @@ export class Mockup {
         transportistaTerrestre: 'ADETRANSCORP',
         valorFleteTerrestre:0,
         puertoOrigen: 'GUAYAQUIL',
-        valorFleteMarítimo: 0
+        valorFleteMaritimo: 0
       },
       {
         planta: 'PLANTA STO DOMINGO',
@@ -576,7 +579,7 @@ export class Mockup {
         refRep: 'GK-1073-1',
         fcl: 1,
         tamanioContenido: '20 PIES',
-        unidadContenido: 'PIES',
+        // unidadContenido: 'PIES',
         prefactAduana: '5110',
         facturaSRI: '',
         sec: 2,
@@ -592,7 +595,7 @@ export class Mockup {
         carga: new Date(),
         embarqueTentativo: new Date(),
         embarqueReal: new Date(),
-        fechaFacturación: new Date(),
+        fechaFacturacion: new Date(),
         naviera: 'TRANSASIA PACIFIC S.A.',
         buque: 'MSC VAISHNAVI R.',
         numeroContenedor: 'TEMU2819370',
@@ -603,7 +606,7 @@ export class Mockup {
         transportistaTerrestre: 'ADETRANSCORP',
         valorFleteTerrestre:600,
         puertoOrigen: 'GUAYAQUIL',
-        valorFleteMarítimo: 0
+        valorFleteMaritimo: 0
       },
       {
         planta: 'PLANTA STO DOMINGO',
@@ -613,7 +616,7 @@ export class Mockup {
         refRep: 'JR-1792-4',
         fcl: 2,
         tamanioContenido: '20 PIES',
-        unidadContenido: 'PIES',
+        // unidadContenido: 'PIES',
         prefactAduana: '5109',
         facturaSRI: '',
         sec: 10,
@@ -629,7 +632,7 @@ export class Mockup {
         carga: new Date(),
         embarqueTentativo: new Date(),
         embarqueReal: new Date(),
-        fechaFacturación: new Date(),
+        fechaFacturacion: new Date(),
         naviera: 'PANATLANTIC LOGISTICS S.A',
         buque: 'ANTOFAGASTA EXPRESS',
         numeroContenedor: '',
@@ -640,7 +643,7 @@ export class Mockup {
         transportistaTerrestre: '',
         valorFleteTerrestre: 600,
         puertoOrigen: 'GUAYAQUIL',
-        valorFleteMarítimo: 0
+        valorFleteMaritimo: 0
       },
       {
         planta: 'PLANTA STO DOMINGO',
@@ -650,7 +653,7 @@ export class Mockup {
         refRep: 'JR-1792-4',
         fcl: 2,
         tamanioContenido: '20 PIES',
-        unidadContenido: 'PIES',
+        // unidadContenido: 'PIES',
         prefactAduana: '5109',
         facturaSRI: '',
         sec: 10,
@@ -666,7 +669,7 @@ export class Mockup {
         carga: new Date(),
         embarqueTentativo: new Date(),
         embarqueReal: new Date(),
-        fechaFacturación: new Date(),
+        fechaFacturacion: new Date(),
         naviera: 'PANATLANTIC LOGISTICS S.A',
         buque: 'ANTOFAGASTA EXPRESS',
         numeroContenedor: '',
@@ -677,7 +680,7 @@ export class Mockup {
         transportistaTerrestre: '',
         valorFleteTerrestre: 600,
         puertoOrigen: 'GUAYAQUIL',
-        valorFleteMarítimo: 0
+        valorFleteMaritimo: 0
       },
       {
         planta: 'PLANTA STO DOMINGO',
@@ -687,7 +690,7 @@ export class Mockup {
         refRep: 'JR-1792-4',
         fcl: 2,
         tamanioContenido: '20 PIES',
-        unidadContenido: 'PIES',
+        // unidadContenido: 'PIES',
         prefactAduana: '5109',
         facturaSRI: '',
         sec: 10,
@@ -703,7 +706,7 @@ export class Mockup {
         carga: new Date(),
         embarqueTentativo: new Date(),
         embarqueReal: new Date(),
-        fechaFacturación: new Date(),
+        fechaFacturacion: new Date(),
         naviera: 'PANATLANTIC LOGISTICS S.A',
         buque: 'ANTOFAGASTA EXPRESS',
         numeroContenedor: '',
@@ -714,7 +717,7 @@ export class Mockup {
         transportistaTerrestre: '',
         valorFleteTerrestre: 600,
         puertoOrigen: 'GUAYAQUIL',
-        valorFleteMarítimo: 0
+        valorFleteMaritimo: 0
       },
       {
         planta: 'PLANTA STO DOMINGO',
@@ -724,7 +727,7 @@ export class Mockup {
         refRep: 'GK-1071-1',
         fcl: 1,
         tamanioContenido: '20 PIES',
-        unidadContenido: 'PIES',
+        // unidadContenido: 'PIES',
         prefactAduana: '',
         facturaSRI: '',
         sec: 2,
@@ -740,7 +743,7 @@ export class Mockup {
         carga: new Date(),
         embarqueTentativo: new Date(),
         embarqueReal: new Date(),
-        fechaFacturación: new Date(),
+        fechaFacturacion: new Date(),
         naviera: 'SAMISA',
         buque: 'MSC RONIT',
         numeroContenedor: '',
@@ -751,7 +754,7 @@ export class Mockup {
         transportistaTerrestre: '',
         valorFleteTerrestre: 350,
         puertoOrigen: 'GUAYAQUIL',
-        valorFleteMarítimo: 0
+        valorFleteMaritimo: 0
       },
       {
         planta: 'PLANTA STO DOMINGO',
@@ -761,7 +764,7 @@ export class Mockup {
         refRep: 'RH-1619-19',
         fcl: 19,
         tamanioContenido: '20 PIES',
-        unidadContenido: 'PIES',
+        // unidadContenido: 'PIES',
         prefactAduana: '',
         facturaSRI: '',
         sec: 4,
@@ -777,7 +780,7 @@ export class Mockup {
         carga: new Date(),
         embarqueTentativo: new Date(),
         embarqueReal: new Date(),
-        fechaFacturación: new Date(),
+        fechaFacturacion: new Date(),
         naviera: 'CMA CGM',
         buque: 'GUAYAQUIL EXPRESS',
         numeroContenedor: '',
@@ -788,22 +791,72 @@ export class Mockup {
         transportistaTerrestre: '',
         valorFleteTerrestre: 300,
         puertoOrigen: 'GUAYAQUIL',
-        valorFleteMarítimo: 0
+        valorFleteMaritimo: 0
       }
     ];
     return this.pedidos;
+  }
+  getAgGridConfig(){
+    this.config = [
+      {field: 'planta', width: 200, resizable: true, sortable: true},
+      // {field: 'paisPlanta', width: 150, resizable: false, sortable: false},
+      // {field: 'refCliente', width: 120, resizable: false, sortable: false},
+      {field: 'reqCliente', width: 210, resizable: false, sortable: false},
+      // {field: 'refRep', width: 150, resizable: false, sortable: false},
+      {field: 'fcl', width: 80, resizable: false, sortable: false},
+      {field: 'tamanioContenido', width: 170, resizable: false, sortable: false},
+      // {field: 'unidadContenido', width: 100, resizable: false, sortable: false},
+      {field: 'prefactAduana', width: 150, resizable: true, sortable: true},
+      {field: 'facturaSRI', width: 180, resizable: true, sortable: true},
+      {field: 'sec', width: 80, resizable: false, sortable: false},
+      {field: 'cliente', width: 250, resizable: true, sortable: true},
+      // {field: 'marca', width: 100, resizable: false, sortable: false},
+      {field: 'cajas', width: 100, resizable: false, sortable: false},
+      {field: 'producto', width: 180, resizable: true, sortable: true},
+      // {field: 'unidadesPorCaja', width: 170, resizable: false, sortable: false},
+      {field: 'destino', width: 200, resizable: true, sortable: true},
+      {field: 'termino', width: 210, resizable: false, sortable: false},
+      {field: 'finCuarentena', width: 210, resizable: false, sortable: false},
+      {field: 'etiquetaFin', width: 210, resizable: false, sortable: false},
+      {field: 'carga', width: 210, resizable: true, sortable: false},
+      {field: 'embarqueTentativo', width: 210, resizable: false, sortable: false},
+      {field: 'embarqueReal', width: 210, resizable: false, sortable: false},
+      {field: 'fechaFacturacion', width: 210, resizable: false, sortable: false},
+      {field: 'naviera', width: 200, resizable: true, sortable: false},
+      {field: 'buque', width: 180, resizable: true, sortable: true},
+      {field: 'numeroContenedor', width: 180, resizable: false, sortable: false},
+      {field: 'sellos', width: 200, resizable: true, sortable: false},
+      {field: 'bl', width: 200, resizable: true, sortable: false},
+      {field: 'estado', width: 180, resizable: false, sortable: true},
+      // {field: 'comentarios', width: 250, resizable: false, sortable: false, cellEditor: 'agLargeTextCellEditor', editable: true, cellEditorPopup: true},
+      {field: 'comentarios', width: 250, resizable: true, sortable: false },
+      {field: 'transportistaTerrestre', width: 160, resizable: false, sortable: false},
+      {field: 'valorFleteTerrestre', width: 100, resizable: false, sortable: false},
+      {field: 'puertoOrigen', width: 160, resizable: false, sortable: false},
+      {field: 'valorFleteMaritimo', width: 100, resizable: false, sortable: false},
+    ];
+    return this.config;
   }
   getColDefs(){
     this.pedidos = this.getPedidos();
     this.cols = Object.getOwnPropertyNames(this.pedidos[0]);
     let that = this;
     this.cols.forEach(item => {
-      let def = {
-        field: item, sortable: true, editable: this.getEditable(item),
-        cellEditor: 'agRichSelectCellEditor',
-        filter: 'agDateColumnFilter',
-      };
-      this.colDefs.push(def);
+      this.config = this.getAgGridConfig();
+      let def = this.config.find(x=> x.field == item);
+      if(def != null) {
+        // @ts-ignore
+        if(this.pedidos[0][item] instanceof Date){
+          def.valueFormatter = function (params) {
+            if(params.value instanceof Date){
+              return moment(params.value).format('DD [de] MMMM [de] YYYY');
+            }else{
+              return '' + params.value;
+            }
+          };
+        }
+        this.colDefs.push(def);
+      }
     });
     return this.colDefs;
   }
@@ -814,5 +867,22 @@ export class Mockup {
       return true;
     }
     return false;
+  }
+
+  getType(colName: string){
+    let dates = ['reqCliente'];
+    if(dates.find(item => item ==colName) != null){
+      return 'dateType';
+    }
+    return 'stringType';
+  }
+
+  getWidth(colName: string){
+    this.config = this.getAgGridConfig();
+    let y = this.config.find(x => x.field == colName);
+    if(y != null){
+      return y.width
+    }
+    return 160;
   }
 }

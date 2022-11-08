@@ -7,14 +7,13 @@
         class="ag-theme-alpine"
         [rowData]="rowData"
         [defaultColDef]="defaultColDef"
-        [components]="components"
         [rowSelection]="rowSelection"
         (selectionChanged)="onSelectionChanged($event)"
         [columnDefs]="columnDefs">
       </ag-grid-angular>
     </div>
     <div class="w-25 ms-2">
-      <mat-tab-group mat-align-tabs="start">
+      <mat-tab-group mat-align-tabs="start" class="max-height">
         <mat-tab label="Buscar">
           <div class="ps-2">
             <form>
@@ -85,70 +84,7 @@
           </div>
         </mat-tab>
         <mat-tab label="Modificar Programacion">
-          <form class="ps-2 mt-2" *ngIf="pedido != null">
-            <div>
-              <mat-form-field class="w-100" appearance="fill">
-                <mat-label>Planta</mat-label>
-                <input matInput type="text" value="{{pedido.planta}}" disabled>
-              </mat-form-field>
-              <mat-form-field class="w-100" appearance="fill">
-                <mat-label>País Planta</mat-label>
-                <input matInput type="text" value="{{pedido.paisPlanta}}" disabled>
-              </mat-form-field>
-              <mat-form-field class="w-100" appearance="fill">
-                <mat-label>Referencia Cliente</mat-label>
-                <input matInput type="text" value="{{pedido.refCliente}}" disabled>
-              </mat-form-field>
-              <mat-form-field class="w-100" appearance="fill">
-                <mat-label>Req Cliente</mat-label>
-                <input matInput type="text" value="{{pedido.reqCliente | date : 'fullDate'}}" disabled>
-              </mat-form-field>
-              <mat-form-field class="w-100" appearance="fill">
-                <mat-label>Ref Cliente</mat-label>
-                <input matInput type="text" value="{{pedido.refCliente}}" disabled>
-              </mat-form-field>
-              <mat-form-field class="w-100" appearance="fill">
-                <mat-label>FCL</mat-label>
-                <input matInput type="number" value="{{pedido.fcl}}" disabled>
-              </mat-form-field>
-              <mat-form-field class="w-100" appearance="fill">
-                <mat-label>Tamaño contenedor</mat-label>
-                <input matInput type="text" value="{{pedido.tamanioContenido}}" disabled>
-              </mat-form-field>
-              <mat-form-field class="w-100" appearance="fill">
-                <mat-label>Prefactura aduana</mat-label>
-                <input matInput type="text" value="{{pedido.prefactAduana}}" disabled>
-              </mat-form-field>
-              <mat-form-field class="w-100" appearance="fill">
-                <mat-label>Factura SRI</mat-label>
-                <input matInput type="text" value="{{pedido.facturaSRI}}" disabled>
-              </mat-form-field>
-              <mat-form-field class="w-100" appearance="fill">
-                <mat-label>Secuencial</mat-label>
-                <input matInput type="text" value="{{pedido.sec}}" disabled>
-              </mat-form-field>
-              <mat-form-field class="w-100" appearance="fill">
-                <mat-label>Cliente</mat-label>
-                <input matInput type="text" value="{{pedido.cliente}}" disabled>
-              </mat-form-field>
-              <mat-form-field class="w-100" appearance="fill">
-                <mat-label>Marca</mat-label>
-                <input matInput type="text" value="{{pedido.marca}}" disabled>
-              </mat-form-field>
-              <mat-form-field class="w-100" appearance="fill">
-                <mat-label>Cajas</mat-label>
-                <input matInput type="text" value="{{pedido.cajas}}" disabled>
-              </mat-form-field>
-              <mat-form-field class="w-100" appearance="fill">
-                <mat-label>Producto</mat-label>
-                <input matInput type="text" value="{{pedido.producto}}" disabled>
-              </mat-form-field>
-              <mat-form-field class="w-100" appearance="fill">
-                <mat-label>Unidades por caja</mat-label>
-                <input matInput type="text" value="{{pedido.unidadesPorCaja}}" disabled>
-              </mat-form-field>
-            </div>
-          </form>
+          <app-modificar [pedido]="pedido" *ngIf="pedido != null"></app-modificar>
         </mat-tab>
       </mat-tab-group>
     </div>

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {
-  ColDef,
+  ColDef, ExcelStyle,
   GridReadyEvent,
   RowSelectedEvent,
   SelectionChangedEvent
@@ -11,6 +11,8 @@ import {FormControl, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {MatDatepicker} from "@angular/material/datepicker";
+import * as moment from 'moment';
+import {AgGridCdt} from "../../../util/custom-data-types/ag-grid-cdt";
 
 @Component({
   selector: 'app-revision',
@@ -22,7 +24,6 @@ export class RevisionComponent implements OnInit {
   public columnDefs: ColDef[] = [];
   rowSelection: 'single' | 'multiple';
   public defaultColDef: {};
-  components: {};
   private mockup: Mockup = new Mockup();
   public rowData: Pedido[] = [];
   public pedido: Pedido;
@@ -57,6 +58,7 @@ export class RevisionComponent implements OnInit {
     this.mockup = new Mockup();
     this.rowData = this.mockup.getPedidos();
     this.columnDefs = this.mockup.getColDefs();
+    // this.columnDefs[0].cellRenderer =
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || '')),
@@ -71,9 +73,6 @@ export class RevisionComponent implements OnInit {
       // floatingFilter: true,
       // resizable: true,
     };
-    this.components = {
-
-    }
   }
 
   private _filter(value: string): string[] {
@@ -88,6 +87,8 @@ export class RevisionComponent implements OnInit {
     console.log('Se tiene: ');
     console.log(rowCount);
     this.pedido = rowCount[0].data;
+    console.log('EL PEDIDO ES:');
+    console.log(this.pedido);
   }
 
 }

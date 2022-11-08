@@ -58,5 +58,13 @@ html, body {
 }
 .ag-cell-value{
   font-family: 'Raleway-Medium';
-  font-size: 18px;
+  font-size: 14px;
+}
+.max-height{
+  min-height: calc(100vh - 300px);
+  max-height: calc(100vh - 300px);
+}
+.mat-tab-group{
+  border: 1px solid #BBBBBB;
+  border-radius: 5px;
 }
