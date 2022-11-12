@@ -27,6 +27,7 @@ const materialModules = [
   MatDatepickerModule,
   MatNativeDateModule,
   MatSelectModule,
+  MatSliderModule,
   MatOptionModule,
   MatButtonModule,
   BrowserAnimationsModule

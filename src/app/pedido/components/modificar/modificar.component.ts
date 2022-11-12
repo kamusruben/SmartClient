@@ -17,17 +17,25 @@ export class ModificarComponent implements OnInit {
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
-    this.editForm = this.fb.group({
-      prefactura: new FormControl(this.pedido.prefactAduana, Validators.required),
-      buque: new FormControl(this.pedido.buque, Validators.required),
-      valorFleteTerrestre: new FormControl(this.pedido.valorFleteTerrestre, Validators.required),
-      valorFleteMaritimo: new FormControl(this.pedido.valorFleteMaritimo, Validators.required),
-    });
+    if(this.editForm != null) {
+      this.editForm = this.fb.group({
+        prefactura: new FormControl(this.pedido.prefactAduana, Validators.required),
+        buque: new FormControl(this.pedido.buque, Validators.required),
+        valorFleteTerrestre: new FormControl(this.pedido.valorFleteTerrestre, Validators.required),
+        valorFleteMaritimo: new FormControl(this.pedido.valorFleteMaritimo, Validators.required),
+      });
+    }else{
+      this.editForm = this.fb.group({
+        prefactura: new FormControl(null, Validators.required),
+        buque: new FormControl(null, Validators.required),
+        valorFleteTerrestre: new FormControl(null, Validators.required),
+        valorFleteMaritimo: new FormControl(null, Validators.required),
+      });
+    }
   }
 
   saveForm(editForm: FormGroup){
     let valid = this.validateForm();
-    debugger
     if(valid){
       this.pedido.prefactAduana = this.editForm.controls['prefactura'].value;
       this.pedido.prefactAduana = this.editForm.controls['buque'].value;

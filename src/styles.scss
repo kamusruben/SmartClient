@@ -2,6 +2,10 @@
 @import 'ag-grid-community/styles/ag-grid.css';
 @import 'ag-grid-community/styles/ag-theme-alpine.css';
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import '~@fortawesome/fontawesome-free/css/all.css';
+@import "~alertifyjs/build/css/alertify.min.css";
+@import "~alertifyjs/build/css/themes/bootstrap.rtl.min.css";
+
 @font-face {
   font-family: 'Raleway';
   src: local('Raleway'), url(assets/fonts/Raleway-Regular.ttf);
@@ -67,4 +71,27 @@ html, body {
 .mat-tab-group{
   border: 1px solid #BBBBBB;
   border-radius: 5px;
+}
+
+.btn{
+  width: 35px;
+  height: 35px;
+  font-size: 14px;
+  margin-right: 5px;
+}
+
+.filtro-embarque{
+  background-color: #eee;
+}
+.filtro-embarque > label{
+  font-size: 1rem;
+  padding: 5px;
+  font-family: 'Raleway-Medium';
+}
+.date-picker-filter>div{
+  width: calc(50% - 16px);
+  margin: 0 5px 0 5px;
+}
+.mat-form-field-appearance-fill .mat-form-field-flex{
+  background-color: #fff !important;
 }
