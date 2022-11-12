@@ -1,1 +1,97 @@
-/* You can add global styles to this file, and also import other style files */
+@import "~bootstrap/dist/css/bootstrap.css";
+@import 'ag-grid-community/styles/ag-grid.css';
+@import 'ag-grid-community/styles/ag-theme-alpine.css';
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import '~@fortawesome/fontawesome-free/css/all.css';
+@import "~alertifyjs/build/css/alertify.min.css";
+@import "~alertifyjs/build/css/themes/bootstrap.rtl.min.css";
+
+@font-face {
+  font-family: 'Raleway';
+  src: local('Raleway'), url(assets/fonts/Raleway-Regular.ttf);
+}
+@font-face {
+  font-family: 'Raleway-Medium';
+  src: local('Raleway-Medium'), url(assets/fonts/Raleway-Medium.ttf);
+}
+*{
+  font-family: 'Raleway';
+}
+.number{
+  font-family: Helvetica;
+}
+.container-fluid{
+  max-width: 90vw !important;
+}
+html, body {
+  height: 100%;
+  width: 100%;
+  padding: 5px;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+}
+.nav-success>.nav-item>.nav-link.active{
+  color: #4C9C2E !important;
+  font-weight: bold !important;
+}
+.filter-title{
+  color: #CCC;
+  border-bottom: 1px solid #CCC;
+}
+
+.leaf-bg{
+  background: url('/assets/images/leaf.png');
+  background-repeat: no-repeat;
+  background-position-y: 6px;
+  padding-left: 36px;
+  line-height: 1;
+}
+
+/* AG GRID*/
+.ag-root-wrapper{
+  border-radius: 10px;
+}
+.ag-header{
+  border-width: 0px;
+}
+.ag-cell-label-container{
+  font-family: 'Raleway';
+  font-size: 13px !important;
+  color: #A1A1A1;
+  font-weight: normal !important;
+}
+.ag-cell-value{
+  font-family: 'Raleway-Medium';
+  font-size: 14px;
+}
+.max-height{
+  min-height: calc(100vh - 300px);
+  max-height: calc(100vh - 300px);
+}
+.mat-tab-group{
+  border: 1px solid #BBBBBB;
+  border-radius: 5px;
+}
+
+.btn{
+  width: 35px;
+  height: 35px;
+  font-size: 14px;
+  margin-right: 5px;
+}
+
+.filtro-embarque{
+  background-color: #eee;
+}
+.filtro-embarque > label{
+  font-size: 1rem;
+  padding: 5px;
+  font-family: 'Raleway-Medium';
+}
+.date-picker-filter>div{
+  width: calc(50% - 16px);
+  margin: 0 5px 0 5px;
+}
+.mat-form-field-appearance-fill .mat-form-field-flex{
+  background-color: #fff !important;
+}
