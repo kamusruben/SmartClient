@@ -17,6 +17,10 @@ export class Mockup {
   getPedidos(){
     this.pedidos = [
       {
+        // planta: {
+        //   codigo: 1,
+        //   nombre: 'PLANTA STO DOMINGO'
+        // },
         planta: 'PLANTA STO DOMINGO',
         paisPlanta: 'ECUADOR',
         refCliente: '466174',
@@ -40,7 +44,7 @@ export class Mockup {
         carga: new Date(),
         embarqueTentativo: new Date(),
         embarqueReal: new Date(),
-        fechaFacturacion: new Date(),
+        fechaFacturacion: new Date('01/01/2022'),
         naviera: 'CMA CGM',
         buque: 'CMA CGM ARKANSAS',
         numeroContenedor: 'FCIU2903823  ',
@@ -789,7 +793,7 @@ export class Mockup {
         estado: 'PROGRAMADO',
         comentarios: 'GQL0261927',
         transportistaTerrestre: '',
-        valorFleteTerrestre: 300,
+        valorFleteTerrestre: 300.23,
         puertoOrigen: 'GUAYAQUIL',
         valorFleteMaritimo: 0
       }
@@ -799,7 +803,7 @@ export class Mockup {
   getAgGridConfig(){
     this.config = [
       {field: 'planta', width: 200, resizable: true, sortable: true},
-      // {field: 'paisPlanta', width: 150, resizable: false, sortable: false},
+      {field: 'paisPlanta', width: 150, resizable: false, sortable: false},
       // {field: 'refCliente', width: 120, resizable: false, sortable: false},
       {field: 'reqCliente', width: 210, resizable: false, sortable: false},
       // {field: 'refRep', width: 150, resizable: false, sortable: false},
@@ -849,7 +853,7 @@ export class Mockup {
         if(this.pedidos[0][item] instanceof Date){
           def.valueFormatter = function (params) {
             if(params.value instanceof Date){
-              return moment(params.value).format('DD [de] MMMM [de] YYYY');
+              return moment(params.value).format('DD/MM/YYYY');
             }else{
               return '' + params.value;
             }

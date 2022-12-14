@@ -1,5 +1,8 @@
 <div class="mt-4">
   <h2 class="text-muted border-bottom">Listado</h2>
+  <div class="w-100">
+    <button class="btn btn-success" style="width: 150px" (click)="exportar()">Exportar</button>
+  </div>
   <div class="d-flex flex-row">
     <div class="w-75">
       <ag-grid-angular
@@ -9,7 +12,10 @@
         [defaultColDef]="defaultColDef"
         [rowSelection]="rowSelection"
         (selectionChanged)="onSelectionChanged($event)"
-        [columnDefs]="columnDefs">
+        [overlayLoadingTemplate]="cargandoRegistros"
+        [overlayNoRowsTemplate]="sinRegistro"
+        [columnDefs]="columnDefs"
+        (gridReady)="onGridReady($event)">
       </ag-grid-angular>
     </div>
     <div class="w-25 ms-2">
@@ -43,14 +49,14 @@
                   </div>
                 </div>
               </div>
-              <!-- FILTRO ESTADO -->
+              <!-- FILTRO PAIS PLANTA -->
               <div class="w-100">
                 <mat-form-field class="w-100 py-0 my-0" appearance="fill">
-                  <mat-label>Estado</mat-label>
-                  <mat-select formControlName="estado" (selectionChange)="filtro($event,'estado')">
+                  <mat-label>País planta</mat-label>
+                  <mat-select formControlName="estado" (selectionChange)="filtro($event,'paisPlanta')">
                     <mat-option value="TODOS">TODOS</mat-option>
-                    <mat-option *ngFor="let estado of estados | keyvalue"
-                                value="{{estado.value}}">{{estado.value}}</mat-option>
+                    <mat-option *ngFor="let pais of paises"
+                                value="{{pais.codigo}}">{{pais.nombre}}</mat-option>
                   </mat-select>
                   <!--                  <mat-hint>Errors appear instantly!</mat-hint>-->
                   <mat-error *ngIf="selected.hasError('required')">Debe seleccionar un valor</mat-error>
@@ -62,13 +68,26 @@
                   <mat-label>Cliente</mat-label>
                   <mat-select formControlName="estado" (selectionChange)="filtro($event,'cliente')">
                     <mat-option value="TODOS">TODOS</mat-option>
-                    <mat-option *ngFor="let cliente of this.clientes | keyvalue"
-                                value="{{cliente.value}}">{{cliente.value}}</mat-option>
+                    <mat-option *ngFor="let cliente of clientes"
+                                value="{{cliente.codigo}}">{{cliente.nombre}}</mat-option>
                   </mat-select>
                   <!--                  <mat-hint>Errors appear instantly!</mat-hint>-->
                   <mat-error *ngIf="selected.hasError('required')">Debe seleccionar un valor</mat-error>
                 </mat-form-field>
               </div>
+              <!-- FILTRO ESTADO -->
+              <div class="w-100">
+                <mat-form-field class="w-100 py-0 my-0" appearance="fill">
+                  <mat-label>Estado</mat-label>
+                  <mat-select formControlName="estado" (selectionChange)="filtro($event,'estado')">
+                    <mat-option *ngFor="let estado of estados | keyvalue"
+                                value="{{estado.value}}">{{estado.value}}</mat-option>
+                  </mat-select>
+                  <!--                  <mat-hint>Errors appear instantly!</mat-hint>-->
+                  <mat-error *ngIf="selected.hasError('required')">Debe seleccionar un valor</mat-error>
+                </mat-form-field>
+              </div>
+
               <!-- FILTRO PRODUCTO -->
               <div class="my-0">
                 <mat-form-field class="w-100 py-0 my-0" appearance="fill">

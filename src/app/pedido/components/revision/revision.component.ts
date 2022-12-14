@@ -16,6 +16,9 @@ import {AgGridCdt} from "../../../util/custom-data-types/ag-grid-cdt";
 import { TrashButtonComponent } from "../botones/trash-button.component";
 import {estadoEnum} from "../../../util/enum/estado.enum";
 import {MatSlideToggle} from "@angular/material/slide-toggle";
+import {CatalogosService} from "../../services/catalogos.service";
+import {Catalogo} from "../../../util/custom-data-types/catalogo";
+import 'ag-grid-enterprise';
 // import { Alertify } from "./../../../util/libraries/alertify";
 declare let alertify: any;
 
@@ -25,6 +28,24 @@ declare let alertify: any;
   styleUrls: ['./revision.component.scss']
 })
 export class RevisionComponent implements OnInit {
+
+  /**
+   * AG GRID CONFIG
+   */
+  public cargandoRegistros: string;
+  public sinRegistro: string;
+  public gridApi: any;
+  /**
+   * CATALOGOS
+   */
+  public paises: Catalogo[];
+  public clientes: Catalogo[];
+  public productos: Catalogo[];
+  public navieras: Catalogo[];
+  public marcas: Catalogo[];
+  public destinos: Catalogo[];
+  // CATALOGOS
+
 
   // protected alertify: Alertify;
   public columnDefs: ColDef[] = [];
@@ -40,14 +61,12 @@ export class RevisionComponent implements OnInit {
   /* Filtro de embarque */
   public hoy = moment();
   public finMes = moment().endOf('month');
-  /* Filtro Cliente */
-  public clientes: string[];
+
   /* Filtro Producto */
-  public productosFiltrados: Observable<string[]>;
-  public productos: string[];
+  public productosFiltrados: Observable<Catalogo[]>;
   /* Filtro Destino */
-  public destinosFiltrados: Observable<string[]>;
-  public destinos: string[];
+  public destinosFiltrados: Observable<Catalogo[]>;
+
 
 
 
@@ -74,16 +93,32 @@ export class RevisionComponent implements OnInit {
   ]);
 
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private _catalogoSevice: CatalogosService) {
     // this.alertify = Alertify.instance;
   }
 
   ngOnInit(): void {
-    console.log('El hoy es: ');
+    this.cargandoRegistros = "<h5>Cargando información...</h5>";
+    this.sinRegistro = "<h5>No existen registros</h5>";
+    //>> LLAMADO A CATALOGOS
+    // this._catalogoSevice.getCatalogPaises().subscribe((result: any) => {
+    //   this.paises = result[0].items;
+    // });
+    this.paises = this._catalogoSevice.getMockPaises();
+    this.clientes = this._catalogoSevice.getMockClientes();
+    console.log('Clientes');
+    console.log(this.clientes);
+    this.destinos = this._catalogoSevice.getMockDestinos();
+    this.marcas = this._catalogoSevice.getMockMarcas();
+    this.productos = this._catalogoSevice.getMockProductos();
+    this.navieras = this._catalogoSevice.getMockNavieras();
+
+    console.log('Los paises son:');
+    console.log(this.paises);
 
     // INICIALIZAR
     // Filtro Cliente
-    this.clientes = [];
+    //this.clientes = [];
     this.productos = [];
     this.destinos = [];
     this.estadosFiltrados = [];
@@ -123,8 +158,8 @@ export class RevisionComponent implements OnInit {
     this.rowSelection = 'single';
     this.defaultColDef = {
       // editable: true,
-      sortable: true,
-      flex: 0,
+      // sortable: false,
+      // flex: 0,
       // minWidth: 150,
       // filter: true,
       // floatingFilter: true,
@@ -134,28 +169,28 @@ export class RevisionComponent implements OnInit {
     // FILTTRADOS
     this.pedidosTodos.forEach((item)=>{
       /* Clientes */
-      if(!this.clientes.includes(item.cliente)){
-        this.clientes.push(item.cliente);
-      }
+      // if(!this.clientes.includes(item.cliente)){
+      //   this.clientes.push(item.cliente);
+      // }
       /* Productos */
-      if(!this.productos.includes(item.producto)){
-        this.productos.push(item.producto);
-      }
+      // if(!this.productos.includes(item.producto)){
+      //   this.productos.push(item.producto);
+      // }
       /* Destinos */
-      if(!this.destinos.includes(item.destino)){
-        this.destinos.push(item.destino);
-      }
+      // if(!this.destinos.includes(item.destino)){
+      //   this.destinos.push(item.destino);
+      // }
     });
   }
 
-  private _filter(value: string, element: string): string[] {
+  private _filter(value: string, element: string): Catalogo[] {
     const filterValue = value.toLowerCase();
     switch (element){
       case 'destino':
-        return this.destinos.filter(option => option.toLowerCase().includes(filterValue));
+        return this.destinos.filter(option => option.nombre.toLowerCase().includes(filterValue));
         break;
       case 'producto':
-        return this.productos.filter(option => option.toLowerCase().includes(filterValue));
+        return this.productos.filter(option => option.nombre.toLowerCase().includes(filterValue));
         break;
       default:
         return [];
@@ -182,14 +217,40 @@ export class RevisionComponent implements OnInit {
   }
 
   public filtro(valor: any, tipo: string):void{
+    debugger
     this.pedidosFiltrados = [];
     this.pedidosFiltrados = this.pedidosTodos;
     let pedido = this.pedidosTodos[0];
     type ObjectKey = keyof typeof pedido;
     let prop: ObjectKey = tipo as ObjectKey;
+
     let value = valor.value;
+    /**
+     * EN CASO DE SER POR OBJETOS EL FILTRADO
+     */
+    let catalogo = this.getCatalogo(tipo);
+    let elemento = catalogo.find(x => x.codigo == parseInt(value));
+    if(elemento != null) {
+      value = elemento.nombre;
+    }
     if(value != estadoEnum.TODOS && value != '') {
       this.pedidosFiltrados = this.pedidosFiltrados.filter(x => x[prop] == value);
+    }
+  }
+
+  public getCatalogo(tipo: string){
+    switch (tipo){
+      case 'producto':
+        return this.productos;
+        break;
+      case 'paisPlanta':
+        return this.paises;
+        break;
+      case 'cliente':
+        return this.clientes;
+        break;
+      default:
+        return [];
     }
   }
 
@@ -230,5 +291,15 @@ export class RevisionComponent implements OnInit {
     this.filterForm.controls['estado'].setValue(this.estados.TODOS);
     this.pedidosFiltrados = this.pedidosTodos;
     this.estadosFiltrados = [];
+  }
+
+  public onGridReady(params: any){
+    console.log('Se carga la información');
+    console.log(params);
+    this.gridApi = params.api;
+  }
+  public exportar(){
+    console.log('Es cierto');
+    this.gridApi.exportDataAsExcel({});
   }
 }

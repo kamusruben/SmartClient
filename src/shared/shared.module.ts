@@ -2,10 +2,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule} from "@angular/forms";
 import {AgGridModule} from 'ag-grid-angular';
+import {DateFormat} from "../app/util/pipes/date-format.pipe";
 
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    DateFormat
+  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -13,7 +16,8 @@ import {AgGridModule} from 'ag-grid-angular';
   ],
   exports: [
     ReactiveFormsModule,
-    AgGridModule
+    AgGridModule,
+    DateFormat
   ]
 })
 export class SharedModule { }
