@@ -1,4 +1,6 @@
 export interface Catalogo {
-  nombre: string,
-  codigo: number
+  nombre?: string,
+  descripcion?: string,
+  descripcionEspanol?: string,
+  codigo: string
 }

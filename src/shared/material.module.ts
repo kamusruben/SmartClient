@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {AgGridModule} from 'ag-grid-angular';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatSliderModule} from '@angular/material/slider';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -9,10 +8,11 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
-import {MatNativeDateModule, MatOptionModule} from "@angular/material/core";
+import {MAT_DATE_LOCALE, MatNativeDateModule, MatOptionModule} from "@angular/material/core";
 import {MatInputModule} from "@angular/material/input";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatSelectModule} from "@angular/material/select";
+import {MatDividerModule} from "@angular/material/divider";
 
 
 
@@ -30,6 +30,7 @@ const materialModules = [
   MatSliderModule,
   MatOptionModule,
   MatButtonModule,
+  MatDividerModule,
   BrowserAnimationsModule
 ];
 
@@ -41,6 +42,11 @@ const materialModules = [
   ],
   exports: [
     materialModules
+  ],
+  providers: [
+    {
+      provide: MAT_DATE_LOCALE, useValue: 'es-ES'
+    }
   ]
 })
 export class MaterialModule {

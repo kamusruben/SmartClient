@@ -1,6 +1,6 @@
 @import "~bootstrap/dist/css/bootstrap.css";
-@import 'ag-grid-community/styles/ag-grid.css';
-@import 'ag-grid-community/styles/ag-theme-alpine.css';
+@import 'ag-grid-community/dist/styles/ag-grid.css';
+@import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import '~@fortawesome/fontawesome-free/css/all.css';
 @import "~alertifyjs/build/css/alertify.min.css";
@@ -94,4 +94,40 @@ html, body {
 }
 .mat-form-field-appearance-fill .mat-form-field-flex{
   background-color: #fff !important;
+}
+
+
+.mat-button.mat-success,
+.mat-stroked-button.mat-success,
+.mat-raised-button.mat-success,
+.ajs-button.ajs-ok{
+  background-color: #4C9C2E !important;
+  border-color: #4C9C2E !important;
+  color:#ffffff !important;
+}
+.mat-button.mat-primary,
+.mat-stroked-button.mat-primary,
+.mat-raised-button.mat-primary{
+  background-color: #224668 !important;
+  border-color: #224668 !important;
+  color:#ffffff !important;
+  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+}
+.ajs-button.ajs-cancel{
+  background-color: #DD3333 !important;
+  border-color: #DD3333 !important;
+  color:#ffffff !important;
+  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+}
+.ajs-message.ajs-success.ajs-visible{
+  background-color: #4C9C2E !important;
+  border-color: #4C9C2E !important;
+  color:#ffffff !important;
+  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+}
+.ajs-message.ajs-error.ajs-visible{
+  background-color: #DD3333 !important;
+  border-color: #DD3333 !important;
+  color:#ffffff !important;
+  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
 }

@@ -42,7 +42,7 @@ export class Mockup {
         finCuarentena: new Date(),
         etiquetaFin: new Date(),
         carga: new Date(),
-        embarqueTentativo: new Date(),
+        embarqueTentativo: new Date('01/01/2022'),
         embarqueReal: new Date(),
         fechaFacturacion: new Date('01/01/2022'),
         naviera: 'CMA CGM',
@@ -79,7 +79,7 @@ export class Mockup {
         finCuarentena: new Date(),
         etiquetaFin: new Date(),
         carga: new Date(),
-        embarqueTentativo: new Date(),
+        embarqueTentativo: new Date('10/01/2022'),
         embarqueReal: new Date(),
         fechaFacturacion: new Date(),
         naviera: 'HAMBURG SUD',
@@ -116,7 +116,7 @@ export class Mockup {
         finCuarentena: new Date(),
         etiquetaFin: new Date(),
         carga: new Date(),
-        embarqueTentativo: new Date(),
+        embarqueTentativo: new Date('20/01/2022'),
         embarqueReal: new Date(),
         fechaFacturacion: new Date(),
         naviera: 'HAMBURG SUD',
@@ -153,7 +153,7 @@ export class Mockup {
         finCuarentena: new Date(),
         etiquetaFin: new Date(),
         carga: new Date(),
-        embarqueTentativo: new Date(),
+        embarqueTentativo: new Date('30/01/2022'),
         embarqueReal: new Date(),
         fechaFacturacion: new Date(),
         naviera: 'CMA CGM',
@@ -190,7 +190,7 @@ export class Mockup {
         finCuarentena: new Date(),
         etiquetaFin: new Date(),
         carga: new Date(),
-        embarqueTentativo: new Date(),
+        embarqueTentativo: new Date('01/02/2022'),
         embarqueReal: new Date(),
         fechaFacturacion: new Date(),
         naviera: 'CMA CGM',
@@ -227,7 +227,7 @@ export class Mockup {
         finCuarentena: new Date(),
         etiquetaFin: new Date(),
         carga: new Date(),
-        embarqueTentativo: new Date(),
+        embarqueTentativo: new Date('10/02/2022'),
         embarqueReal: new Date(),
         fechaFacturacion: new Date(),
         naviera: 'CMA CGM',
@@ -264,7 +264,7 @@ export class Mockup {
         finCuarentena: new Date(),
         etiquetaFin: new Date(),
         carga: new Date(),
-        embarqueTentativo: new Date(),
+        embarqueTentativo: new Date('20/02/2022'),
         embarqueReal: new Date(),
         fechaFacturacion: new Date(),
         naviera: 'CMA CGM',
@@ -301,7 +301,7 @@ export class Mockup {
         finCuarentena: new Date(),
         etiquetaFin: new Date(),
         carga: new Date(),
-        embarqueTentativo: new Date(),
+        embarqueTentativo: new Date('01/03/2022'),
         embarqueReal: new Date(),
         fechaFacturacion: new Date(),
         naviera: 'A.HARTRODT ECUADOR LOGISTICS S.A.',
@@ -338,7 +338,7 @@ export class Mockup {
         finCuarentena: new Date(),
         etiquetaFin: new Date(),
         carga: new Date(),
-        embarqueTentativo: new Date(),
+        embarqueTentativo: new Date('10/03/2022'),
         embarqueReal: new Date(),
         fechaFacturacion: new Date(),
         naviera: 'SEABOARD MARINE',
@@ -375,7 +375,7 @@ export class Mockup {
         finCuarentena: new Date(),
         etiquetaFin: new Date(),
         carga: new Date(),
-        embarqueTentativo: new Date(),
+        embarqueTentativo: new Date('20/03/2022'),
         embarqueReal: new Date(),
         fechaFacturacion: new Date(),
         naviera: 'SEABOARD MARINE',
@@ -412,7 +412,7 @@ export class Mockup {
         finCuarentena: new Date(),
         etiquetaFin: new Date(),
         carga: new Date(),
-        embarqueTentativo: new Date(),
+        embarqueTentativo: new Date('30/03/2022'),
         embarqueReal: new Date(),
         fechaFacturacion: new Date(),
         naviera: 'KUEHNE & NAGEL',
@@ -449,7 +449,7 @@ export class Mockup {
         finCuarentena: new Date(),
         etiquetaFin: new Date(),
         carga: new Date(),
-        embarqueTentativo: new Date(),
+        embarqueTentativo: new Date('01/04/2022'),
         embarqueReal: new Date(),
         fechaFacturacion: new Date(),
         naviera: 'SEABOARD MARINE',
@@ -486,7 +486,7 @@ export class Mockup {
         finCuarentena: new Date(),
         etiquetaFin: new Date(),
         carga: new Date(),
-        embarqueTentativo: new Date(),
+        embarqueTentativo: new Date('10/04/2022'),
         embarqueReal: new Date(),
         fechaFacturacion: new Date(),
         naviera: 'KING OCEAN',
@@ -523,7 +523,7 @@ export class Mockup {
         finCuarentena: new Date(),
         etiquetaFin: new Date(),
         carga: new Date(),
-        embarqueTentativo: new Date(),
+        embarqueTentativo: new Date('20/04/2022'),
         embarqueReal: new Date(),
         fechaFacturacion: new Date(),
         naviera: 'KING OCEAN',
@@ -560,7 +560,7 @@ export class Mockup {
         finCuarentena: new Date(),
         etiquetaFin: new Date(),
         carga: new Date(),
-        embarqueTentativo: new Date(),
+        embarqueTentativo: new Date('30/04/2022'),
         embarqueReal: new Date(),
         fechaFacturacion: new Date(),
         naviera: 'TRANSASIA PACIFIC S.A.',
@@ -597,7 +597,7 @@ export class Mockup {
         finCuarentena: new Date(),
         etiquetaFin: new Date(),
         carga: new Date(),
-        embarqueTentativo: new Date(),
+        embarqueTentativo: new Date('01/05/2022'),
         embarqueReal: new Date(),
         fechaFacturacion: new Date(),
         naviera: 'TRANSASIA PACIFIC S.A.',
@@ -634,7 +634,7 @@ export class Mockup {
         finCuarentena: new Date(),
         etiquetaFin: new Date(),
         carga: new Date(),
-        embarqueTentativo: new Date(),
+        embarqueTentativo: new Date('10/05/2022'),
         embarqueReal: new Date(),
         fechaFacturacion: new Date(),
         naviera: 'PANATLANTIC LOGISTICS S.A',
@@ -671,7 +671,7 @@ export class Mockup {
         finCuarentena: new Date(),
         etiquetaFin: new Date(),
         carga: new Date(),
-        embarqueTentativo: new Date(),
+        embarqueTentativo: new Date('20/05/2022'),
         embarqueReal: new Date(),
         fechaFacturacion: new Date(),
         naviera: 'PANATLANTIC LOGISTICS S.A',
@@ -708,7 +708,7 @@ export class Mockup {
         finCuarentena: new Date(),
         etiquetaFin: new Date(),
         carga: new Date(),
-        embarqueTentativo: new Date(),
+        embarqueTentativo: new Date('30/05/2022'),
         embarqueReal: new Date(),
         fechaFacturacion: new Date(),
         naviera: 'PANATLANTIC LOGISTICS S.A',
@@ -745,7 +745,7 @@ export class Mockup {
         finCuarentena: new Date(),
         etiquetaFin: new Date(),
         carga: new Date(),
-        embarqueTentativo: new Date(),
+        embarqueTentativo: new Date('01/06/2022'),
         embarqueReal: new Date(),
         fechaFacturacion: new Date(),
         naviera: 'SAMISA',
@@ -782,7 +782,7 @@ export class Mockup {
         finCuarentena: new Date(),
         etiquetaFin: new Date(),
         carga: new Date(),
-        embarqueTentativo: new Date(),
+        embarqueTentativo: new Date('10/06/2022'),
         embarqueReal: new Date(),
         fechaFacturacion: new Date(),
         naviera: 'CMA CGM',
@@ -802,11 +802,12 @@ export class Mockup {
   }
   getAgGridConfig(){
     this.config = [
-      {field: 'planta', width: 200, resizable: true, sortable: true},
+      {field: 'botones', headerName:'', width: 120, resizable: false, sortable: false},
+      {field: 'planta', width: 200, resizable: true, sortable: false},
       {field: 'paisPlanta', width: 150, resizable: false, sortable: false},
-      // {field: 'refCliente', width: 120, resizable: false, sortable: false},
+      {field: 'refCliente', width: 120, resizable: false, sortable: false},
       {field: 'reqCliente', width: 210, resizable: false, sortable: false},
-      // {field: 'refRep', width: 150, resizable: false, sortable: false},
+      {field: 'refRep', headerName: 'Representante', width: 150, resizable: false, sortable: false},
       {field: 'fcl', width: 80, resizable: false, sortable: false},
       {field: 'tamanioContenido', width: 170, resizable: false, sortable: false},
       // {field: 'unidadContenido', width: 100, resizable: false, sortable: false},
@@ -814,7 +815,7 @@ export class Mockup {
       {field: 'facturaSRI', width: 180, resizable: true, sortable: true},
       {field: 'sec', width: 80, resizable: false, sortable: false},
       {field: 'cliente', width: 250, resizable: true, sortable: true},
-      // {field: 'marca', width: 100, resizable: false, sortable: false},
+      {field: 'marca', width: 200, resizable: true, sortable: false},
       {field: 'cajas', width: 100, resizable: false, sortable: false},
       {field: 'producto', width: 180, resizable: true, sortable: true},
       // {field: 'unidadesPorCaja', width: 170, resizable: false, sortable: false},
@@ -844,9 +845,9 @@ export class Mockup {
   getColDefs(){
     this.pedidos = this.getPedidos();
     this.cols = Object.getOwnPropertyNames(this.pedidos[0]);
-    let that = this;
+    this.config = this.getAgGridConfig();
+    this.colDefs.push(this.config[0]);
     this.cols.forEach(item => {
-      this.config = this.getAgGridConfig();
       let def = this.config.find(x=> x.field == item);
       if(def != null) {
         // @ts-ignore
@@ -855,7 +856,7 @@ export class Mockup {
             if(params.value instanceof Date){
               return moment(params.value).format('DD/MM/YYYY');
             }else{
-              return '' + params.value;
+              return '>>' + params.value;
             }
           };
         }

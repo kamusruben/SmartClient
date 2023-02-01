@@ -1,4 +1,4 @@
-export enum estadoEnum{
+export enum estadoProgramacionEnum{
   TODOS = 'TODOS',
   CARGADO = 'CARGADO',
   ETIQUETADO = 'ETIQUETADO',
