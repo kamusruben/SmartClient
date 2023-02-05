@@ -13,6 +13,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatSelectModule} from "@angular/material/select";
 import {MatDividerModule} from "@angular/material/divider";
+import {MatProgressSpinnerModule, MatSpinner} from "@angular/material/progress-spinner";
 
 
 
@@ -31,6 +32,7 @@ const materialModules = [
   MatOptionModule,
   MatButtonModule,
   MatDividerModule,
+  MatProgressSpinnerModule,
   BrowserAnimationsModule
 ];
 

@@ -1,6 +1,7 @@
 export enum estadoProgramacionEnum{
   TODOS = 'TODOS',
   CARGADO = 'CARGADO',
+  EMBARCADO = 'EMBARCADO',
   ETIQUETADO = 'ETIQUETADO',
   LIBERADO = 'LIBERADO',
   PROGRAMADO = 'PROGRAMADO'

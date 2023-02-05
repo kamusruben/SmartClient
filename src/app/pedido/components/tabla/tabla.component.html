@@ -1,30 +1,30 @@
-
 <div class="mt-4">
   <h2 class="text-muted border-bottom">Listado</h2>
   <div class="w-100">
-    <button class="me-2 px-2 mb-2" mat-raised-button color="success" (click)="exportar()"><i class="fa fa-file-excel me-2"></i> Exportar a Excel</button>
+<!--    <button class="me-2 px-2 mb-2" mat-raised-button color="success" (click)="exportar()"><i class="fa fa-file-excel me-2"></i> Exportar a Excel</button>-->
   </div>
   <div class="d-flex flex-row">
     <div class="w-75">
 <!--      [modules]="modules"-->
       <ag-grid-angular
-        style="width: auto; height: 100%;"
-        class="ag-theme-alpine"
-
-        [excelStyles]="excelStyles"
-        [defaultExportParams]="defaultExportParams"
+        style="width: auto;"
+        class="ag-theme-alpine max-height"
         [rowData]="pedidosFiltrados"
-        [defaultColDef]="defaultColDef"
+        [columnDefs]="columnDefs"
         [rowSelection]="rowSelection"
-        (selectionChanged)="onSelectionChanged($event)"
         [overlayLoadingTemplate]="cargandoRegistros"
         [overlayNoRowsTemplate]="sinRegistro"
-        [columnDefs]="columnDefs"
+        (selectionChanged)="onSelectionChanged($event)"
         (gridReady)="onGridReady($event)">
       </ag-grid-angular>
+      <mat-spinner *ngIf="spinner" class="spinner"></mat-spinner>
+      <div class="d-flex flew-row justify-content-start mt-2">
+        <div class="me-3"><strong>Número de resultados:</strong> {{pedidosFiltrados.length}}</div>
+        <div><strong>Seleccionados:</strong> {{pedidosSeleccionados.length}}</div>
+      </div>
     </div>
     <div class="w-25 ms-2">
-      <mat-tab-group mat-align-tabs="start" class="max-height">
+      <mat-tab-group mat-align-tabs="start" class="max-height" #tabGroup>
         <mat-tab label="Buscar">
           <div class="px-2">
             <form [formGroup]="filterForm">
@@ -35,7 +35,7 @@
                   <div>
                     <mat-form-field class="w-100" appearance="fill">
                       <mat-label>Escoja una fecha</mat-label>
-                      <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker"
+                      <input matInput [matDatepicker]="picker"
                              formControlName="embarqueDesde">
                       <!--                      <mat-hint>MM/DD/YYYY</mat-hint>-->
                       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -45,9 +45,9 @@
                   <div>
                     <mat-form-field class="w-100" appearance="fill">
                       <mat-label>Escoja una fecha</mat-label>
-                      <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker2"
+                      <input matInput [matDatepicker]="picker2"
                              formControlName="embarqueHasta">
-<!--                      <mat-hint>MM/DD/YYYY</mat-hint>-->
+                      <!--                      <mat-hint>MM/DD/YYYY</mat-hint>-->
                       <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                       <mat-datepicker #picker2></mat-datepicker>
                     </mat-form-field>
@@ -66,7 +66,7 @@
                                 value="{{pais.codigo}}">{{pais.descripcion}}</mat-option>
                   </mat-select>
                   <!--                  <mat-hint>Errors appear instantly!</mat-hint>-->
-<!--                  <mat-error *ngIf="selected.hasError('required')">Debe seleccionar un valor</mat-error>-->
+                  <!--                  <mat-error *ngIf="selected.hasError('required')">Debe seleccionar un valor</mat-error>-->
                 </mat-form-field>
               </div>
               <!-- FILTRO REPRESENTANTE-->
@@ -78,10 +78,10 @@
                   <mat-select formControlName="representante">
                     <mat-option value="TODOS"><strong>TODOS</strong></mat-option>
                     <mat-option *ngFor="let rep of representantes"
-                                value="{{rep.codigo}}">{{rep.nombre}}</mat-option>
+                                value="{{rep.codigoRepresentante}}">{{rep.nombre}}</mat-option>
                   </mat-select>
                   <!--                  <mat-hint>Errors appear instantly!</mat-hint>-->
-<!--                  <mat-error *ngIf="selected.hasError('required')">Debe seleccionar un valor</mat-error>-->
+                  <!--                  <mat-error *ngIf="selected.hasError('required')">Debe seleccionar un valor</mat-error>-->
                 </mat-form-field>
               </div>
               <br/>
@@ -97,7 +97,7 @@
                                 value="{{cliente.codigo}}">{{cliente.nombre}}</mat-option>
                   </mat-select>
                   <!--                  <mat-hint>Errors appear instantly!</mat-hint>-->
-<!--                  <mat-error *ngIf="selected.hasError('required')">Debe seleccionar un valor</mat-error>-->
+                  <!--                  <mat-error *ngIf="selected.hasError('required')">Debe seleccionar un valor</mat-error>-->
                 </mat-form-field>
               </div>
               <!-- FILTRO ESTADO -->
@@ -144,7 +144,7 @@
                                 value="{{nav.codigo}}">{{nav.nombre}}</mat-option>
                   </mat-select>
                   <!--                  <mat-hint>Errors appear instantly!</mat-hint>-->
-<!--                  <mat-error *ngIf="selected.hasError('required')">Debe seleccionar un valor</mat-error>-->
+                  <!--                  <mat-error *ngIf="selected.hasError('required')">Debe seleccionar un valor</mat-error>-->
                 </mat-form-field>
               </div>
               <!-- FILTRO MARCA -->
@@ -159,7 +159,7 @@
                                 value="{{marca.codigo}}">{{marca.descripcion}}</mat-option>
                   </mat-select>
                   <!--                  <mat-hint>Errors appear instantly!</mat-hint>-->
-<!--                  <mat-error *ngIf="selected.hasError('required')">Debe seleccionar un valor</mat-error>-->
+                  <!--                  <mat-error *ngIf="selected.hasError('required')">Debe seleccionar un valor</mat-error>-->
                 </mat-form-field>
               </div>
               <!-- FILTRO CONTENEDOR -->
@@ -173,8 +173,8 @@
                          formControlName="numeroContenedor"
                          [matAutocomplete]="acContenedor">
                   <!--                  Filtrado uno a uno-->
-<!--                         (change)="filtro($event.target,'numeroContenedor')" >-->
-<!--                  <mat-autocomplete autoActiveFirstOption #acContenedor="matAutocomplete" (optionSelected)="filtro($event.option, 'numeroContenedor')">-->
+                  <!--                         (change)="filtro($event.target,'numeroContenedor')" >-->
+                  <!--                  <mat-autocomplete autoActiveFirstOption #acContenedor="matAutocomplete" (optionSelected)="filtro($event.option, 'numeroContenedor')">-->
                   <mat-autocomplete autoActiveFirstOption #acContenedor="matAutocomplete">
                     <mat-option *ngFor="let cont of contenedoresFiltrados | async" [value]="cont">
                       {{cont}}
@@ -193,8 +193,8 @@
                          formControlName="prefactura"
                          [matAutocomplete]="acPrefactura">
                   <!--                  Filtrado uno a uno-->
-<!--                         (change)="filtro($event.target,'prefactAduana')">-->
-<!--                  <mat-autocomplete autoActiveFirstOption #acPrefactura="matAutocomplete" (optionSelected)="filtro($event.option, 'prefactAduana')">-->
+                  <!--                         (change)="filtro($event.target,'prefactAduana')">-->
+                  <!--                  <mat-autocomplete autoActiveFirstOption #acPrefactura="matAutocomplete" (optionSelected)="filtro($event.option, 'prefactAduana')">-->
                   <mat-autocomplete autoActiveFirstOption #acPrefactura="matAutocomplete">
                     <mat-option *ngFor="let cont of prefacturasFiltrados | async" [value]="cont">
                       {{cont}}
@@ -209,7 +209,7 @@
                                   *ngFor="let estado of estados | keyvalue">{{estado.value}}</mat-slide-toggle>
               </div>
               <div class="my-3">
-                <div class="ps-2 mat-error small" *ngIf="errorDates">{{errorMsg}}</div>
+<!--                <div class="ps-2 mat-error small" *ngIf="errorDates">{{errorMsg}}</div>-->
                 <button class="me-2 w-50" mat-raised-button color="success" (click)="aplicarFiltros()">Buscar</button>
                 <button mat-raised-button color="primary" (click)="limpiarFiltros()">Limpiar</button>
               </div>
@@ -221,5 +221,4 @@
         </mat-tab>
       </mat-tab-group>
     </div>
-  </div>
 </div>

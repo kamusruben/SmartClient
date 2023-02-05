@@ -44,6 +44,10 @@ export class CatalogosService {
     return this.http.get(url);
   }
 
+  getRepresentantePorPais(pais: string){
+    const url = `${this.url}representante/por-pais/?q=${pais}`;
+    return this.http.get(url);
+  }
   getCatalogByCode(code: string){
     const url = `${this.url}generic?code=${code}`;
     return this.http.get(url);

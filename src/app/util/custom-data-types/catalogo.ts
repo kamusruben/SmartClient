@@ -4,3 +4,8 @@ export interface Catalogo {
   descripcionEspanol?: string,
   codigo: string
 }
+
+export interface Representante {
+  codigoRepresentante: string,
+  nombre: string
+}

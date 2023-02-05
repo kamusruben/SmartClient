@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { RevisionComponent } from "./pedido/components/revision/revision.component";
+import { TablaComponent } from "./pedido/components/tabla/tabla.component";
 
 const routes: Routes = [
   {
     path: 'home',
-    component: RevisionComponent
+    component: TablaComponent
   }];
 
 @NgModule({

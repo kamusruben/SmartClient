@@ -65,8 +65,9 @@ html, body {
   font-size: 14px;
 }
 .max-height{
-  min-height: calc(100vh - 300px);
-  max-height: calc(100vh - 300px);
+  min-height: calc(100vh - 250px);
+  max-height: calc(100vh - 250px);
+  height: calc(100vh - 250px);
 }
 .mat-tab-group{
   border: 1px solid #BBBBBB;
@@ -91,6 +92,11 @@ html, body {
 .date-picker-filter>div{
   width: calc(50% - 16px);
   margin: 0 5px 0 5px;
+}
+.spinner{
+  position: absolute !important;
+  top: 50vh;
+  left: 35vw
 }
 .mat-form-field-appearance-fill .mat-form-field-flex{
   background-color: #fff !important;
