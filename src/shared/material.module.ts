@@ -14,6 +14,8 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatSelectModule} from "@angular/material/select";
 import {MatDividerModule} from "@angular/material/divider";
 import {MatProgressSpinnerModule, MatSpinner} from "@angular/material/progress-spinner";
+import {MatRadioModule} from "@angular/material/radio";
+import {MatIconModule} from "@angular/material/icon";
 
 
 
@@ -32,6 +34,8 @@ const materialModules = [
   MatOptionModule,
   MatButtonModule,
   MatDividerModule,
+  MatRadioModule,
+  MatIconModule,
   MatProgressSpinnerModule,
   BrowserAnimationsModule
 ];

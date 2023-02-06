@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule} from "@angular/forms";
-import {AgGridModule} from 'ag-grid-angular';
 import {DateFormat} from "../app/util/pipes/date-format.pipe";
+import {AgGridModule} from "ag-grid-angular";
 
 
 @NgModule({
@@ -12,7 +12,7 @@ import {DateFormat} from "../app/util/pipes/date-format.pipe";
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    AgGridModule,
+    AgGridModule.withComponents([]),
   ],
   exports: [
     ReactiveFormsModule,

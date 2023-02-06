@@ -11,7 +11,7 @@ import {ProgramacionService} from "../../services/programacion.service";
 import {GetProgramacion} from "../../../util/custom-data-types/get-programacion";
 import {UtilFunctions} from 'src/app/util/functions/util-functions';
 import {
-  ColDef, ExcelStyle, GridApi,
+  ColDef, ColumnApi, ExcelStyle, GridApi,
   GridReadyEvent, Module,
   RowSelectedEvent,
   SelectionChangedEvent
@@ -20,7 +20,7 @@ import {Mockup} from "../../../mockup/mockup";
 import {CatalogosService} from "../../services/catalogos.service";
 import {estadoCatalogoEnumEnum} from "../../../util/enum/estadoCatalogoEnum.enum";
 import {TrashButtonComponent} from "../botones/trash-button.component";
-
+import { AllModules } from '@ag-grid-enterprise/all-modules';
 
 @Component({
   selector: 'app-tabla',
@@ -28,6 +28,7 @@ import {TrashButtonComponent} from "../botones/trash-button.component";
   styleUrls: ['./tabla.component.scss']
 })
 export class TablaComponent implements OnInit {
+  public modules = AllModules;
 
   /** AG GRID */
   public columnDefs: ColDef[] = [];
@@ -35,6 +36,7 @@ export class TablaComponent implements OnInit {
   public cargandoRegistros: string = '<h5>Cargando información...</h5>';
   public sinRegistro: string = '<h5>No existe información...</h5>';
   private gridApi!: GridApi;
+  private gridColumnApi: ColumnApi;
 
   /** CATALOGOS */
   public paises: Catalogo[];
@@ -42,6 +44,7 @@ export class TablaComponent implements OnInit {
   public representantes: Representante[];
   public productos: Catalogo[];
   public navieras: Catalogo[];
+  public puertos: Catalogo[];
   public marcas: Catalogo[];
 
   /** FILTROS */
@@ -104,37 +107,37 @@ export class TablaComponent implements OnInit {
 
     /* DEFINICION DE COLUMNAS */
     this.columnDefs = [
-      {field: 'planta'},
-      {field: 'fechaTentativaEmbarque', headerName: 'Embarq. Tent.'},
-      {field: 'pais', headerName: 'País Planta'},
-      {field: 'refCliente', headerName: 'Ref. Cliente'},
-      {field: 'fechaRequeridaCliente', headerName: 'Req. x Cliente'},
-      {field: 'numeroReferenciaRepresentante', headerName: 'Ref. Rep'},
-      {field: 'descripcionTamanoContenedor', headerName: 'Tam. Cont.'},
-      {field: 'numeroFacturaSRI', headerName: 'Factura SRI'},
-      {field: 'nombreCliente', headerName: 'Cliente', resizable: true},
-      {field: 'descripcionMarca', headerName: 'Marca'},
-      {field: 'numeroCajas', headerName: 'Cajas'},
-      {field: 'descripcionProducto', headerName: 'Producto', resizable: true},
-      {field: 'descripcionUnidadesCaja', headerName: 'Unid/Caja'},
-      {field: 'nombrePuertoDestino', headerName: 'Destino'},
-      {field: 'fechaTermino', headerName: 'Término'},
-      {field: 'fechaFinCuarentena', headerName: 'Fin Cuarentena'},
-      {field: 'fechaEtiquetadoFinal', headerName: 'Etiq. Final'},
-      {field: 'fechaCarga', headerName: 'Carga'},
+      {field: 'planta', minWidth: 100},
+      {field: 'fechaTentativaEmbarque', headerName: 'Embarq. Tent.', minWidth: 100},
+      {field: 'pais', headerName: 'País Planta', minWidth: 100},
+      {field: 'refCliente', headerName: 'Ref. Cliente', minWidth: 100},
+      {field: 'fechaRequeridaCliente', headerName: 'Req. x Cliente', minWidth: 100},
+      {field: 'numeroReferenciaRepresentante', headerName: 'Ref. Rep', minWidth: 100},
+      {field: 'descripcionTamanoContenedor', headerName: 'Tam. Cont.', minWidth: 100},
+      {field: 'numeroFacturaSRI', headerName: 'Factura SRI', minWidth: 100},
+      {field: 'nombreCliente', headerName: 'Cliente', resizable: true, minWidth: 100},
+      {field: 'descripcionMarca', headerName: 'Marca', minWidth: 100},
+      {field: 'numeroCajas', headerName: 'Cajas', minWidth: 100},
+      {field: 'descripcionProducto', headerName: 'Producto', resizable: true, minWidth: 100},
+      {field: 'descripcionUnidadesCaja', headerName: 'Unid/Caja', minWidth: 100},
+      {field: 'nombrePuertoDestino', headerName: 'Destino', minWidth: 100},
+      {field: 'fechaTermino', headerName: 'Término', minWidth: 100},
+      {field: 'fechaFinCuarentena', headerName: 'Fin Cuarentena', minWidth: 100},
+      {field: 'fechaEtiquetadoFinal', headerName: 'Etiq. Final', minWidth: 100},
+      {field: 'fechaCarga', headerName: 'Carga', minWidth: 100},
       //{field: 'fechaTentativaEmbarque', headerName: 'Embarq. Tent.'},
-      {field: 'fechaRealEmbarque', headerName: 'Embarq. Real'},
-      {field: 'fechaFacturacion', headerName: 'Fecha de Facturación'},
-      {field: 'nombreNaviera', headerName: 'Naviera'},
-      {field: 'nombreBuqueNaviera', headerName: 'Buque'},
-      {field: 'identificadorContenedor', headerName: 'Nro. Contenedor'},
-      {field: 'numeroBL', headerName: 'Nro. BL'},
-      {field: 'estadoDetalle', headerName: 'Estado'},
+      {field: 'fechaRealEmbarque', headerName: 'Embarq. Real', minWidth: 100},
+      {field: 'fechaFacturacion', headerName: 'Fecha de Facturación', minWidth: 100},
+      {field: 'nombreNaviera', headerName: 'Naviera', minWidth: 100},
+      {field: 'nombreBuqueNaviera', headerName: 'Buque', minWidth: 100},
+      {field: 'identificadorContenedor', headerName: 'Nro. Contenedor', minWidth: 100},
+      {field: 'numeroBL', headerName: 'Nro. BL', minWidth: 100},
+      {field: 'estadoDetalle', headerName: 'Estado', minWidth: 100},
       // { field: 'estadoProgramacion', headerName: 'Estado' },
-      {field: 'comentariosInaexpo', headerName: 'Comentarios'},
-      {field: 'valorFlete', headerName: 'Flete Terrestre'},
-      {field: 'nombrePuertoOrigen', headerName: 'Puerto Origen'},
-      {field: 'fleteMaritimo', headerName: 'Flete Marítimo'},
+      {field: 'comentariosInaexpo', headerName: 'Comentarios', minWidth: 100},
+      {field: 'valorFlete', headerName: 'Flete Terrestre', minWidth: 100},
+      {field: 'nombrePuertoOrigen', headerName: 'Puerto Origen', minWidth: 100},
+      {field: 'fleteMaritimo', headerName: 'Flete Marítimo', minWidth: 100},
     ];
 
     this.columnDefs[0].cellRenderer = TrashButtonComponent;
@@ -173,12 +176,14 @@ export class TablaComponent implements OnInit {
     catalogos.push(this._catalogoSevice.getNavieraPorPais(this.estadosCatalogo.ACTIVO, this.usuario, this.pais));
     catalogos.push(this._catalogoSevice.getPuertoPorUsuarioPais(this.estadosCatalogo.ACTIVO, this.usuario, this.pais));
     catalogos.push(this._catalogoSevice.getRepresentantePorPais(this.pais));
+    catalogos.push(this._catalogoSevice.getRepresentantePorPais(this.pais));
     forkJoin(catalogos).subscribe((result: any[]) => {
       this.clientes = result[0].return;
       this.marcas = result[1].return;
       this.productos = result[2].return;
       this.paises = result[3].return;
       this.navieras = result[4].return;
+      this.puertos = result[5].return;
       this.representantes = result[6].return;
 
       this.productosFiltrados = this.filterForm.controls['producto'].valueChanges.pipe(
@@ -206,9 +211,9 @@ export class TablaComponent implements OnInit {
   }
 
   public onGridReady(params: any) {
-
+    this.gridColumnApi = params.columnApi;
     this.gridApi = params.api;
-
+    this.gridApi.sizeColumnsToFit();
   }
 
   public filtroEstado(valor: any, tipo: string, checked: boolean = true) {
@@ -348,6 +353,38 @@ export class TablaComponent implements OnInit {
     var selectedRows = this.gridApi.getSelectedRows();
     this.pedidosSeleccionados = selectedRows;
     this.pedido = this.pedidosSeleccionados[0];
+    console.log('El pedido seleccionado es:');
+    console.log(this.pedido);
+  }
+
+  exportAsExcel(filename?: string): void {
+    const params = {
+      columnGroups: true,
+      allColumns: true,
+      fileName: 'Filename',
+    };
+    this.gridApi.exportDataAsCsv(params);
+    // this.gridApi.exportDataAsExcel();
+    // this.gridApi.exportDataAsExcel({
+    //   columnKeys: this.generateColumnsForExcel(),
+    //   processCellCallback: function (params) {
+    //     if (params.column.getColId() === 'currentPrice') {
+    //       return params.value?.amount + ' ' + params.value?.currency;
+    //     }
+    //     return params.value;
+    //   }
+    // })
+  }
+
+  generateColumnsForExcel(): string[] {
+    const keys = this.gridColumnApi
+      .getAllDisplayedColumns()
+      .map(column => column.getColId())
+
+    const amountIndex: number = keys.findIndex(column => column === 'newPrice');
+    keys.splice(amountIndex + 1, 0, 'currency');
+
+    return keys;
   }
 
   /*** COMPLETAR PARAMETROS */

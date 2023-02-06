@@ -843,27 +843,27 @@ export class Mockup {
     return this.config;
   }
   getColDefs(){
-    this.pedidos = this.getPedidos();
-    this.cols = Object.getOwnPropertyNames(this.pedidos[0]);
-    this.config = this.getAgGridConfig();
-    this.colDefs.push(this.config[0]);
-    this.cols.forEach(item => {
-      let def = this.config.find(x=> x.field == item);
-      if(def != null) {
-        // @ts-ignore
-        if(this.pedidos[0][item] instanceof Date){
-          def.valueFormatter = function (params) {
-            if(params.value instanceof Date){
-              return moment(params.value).format('DD/MM/YYYY');
-            }else{
-              return '>>' + params.value;
-            }
-          };
-        }
-        this.colDefs.push(def);
-      }
-    });
-    return this.colDefs;
+    // this.pedidos = this.getPedidos();
+    // this.cols = Object.getOwnPropertyNames(this.pedidos[0]);
+    // this.config = this.getAgGridConfig();
+    // this.colDefs.push(this.config[0]);
+    // this.cols.forEach(item => {
+    //   let def = this.config.find(x=> x.field == item);
+    //   if(def != null) {
+    //     // @ts-ignore
+    //     if(this.pedidos[0][item] instanceof Date){
+    //       def.valueFormatter = function (params) {
+    //         if(params.value instanceof Date){
+    //           return moment(params.value).format('DD/MM/YYYY');
+    //         }else{
+    //           return '>>' + params.value;
+    //         }
+    //       };
+    //     }
+    //     this.colDefs.push(def);
+    //   }
+    // });
+    // return this.colDefs;
   }
 
   getEditable(colName: string){
