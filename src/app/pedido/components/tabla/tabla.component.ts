@@ -1,5 +1,13 @@
-import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {
+  AfterContentChecked,
+  AfterContentInit, AfterViewChecked,
+  AfterViewInit,
+  Component,
+  OnInit,
+  QueryList,
+  ViewChildren
+} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Catalogo, Representante} from "../../../util/custom-data-types/catalogo";
 import {Observable, forkJoin} from "rxjs";
 import {finalize, map, startWith} from 'rxjs/operators';
@@ -19,15 +27,15 @@ import {
 import {Mockup} from "../../../mockup/mockup";
 import {CatalogosService} from "../../services/catalogos.service";
 import {estadoCatalogoEnumEnum} from "../../../util/enum/estadoCatalogoEnum.enum";
-import {TrashButtonComponent} from "../botones/trash-button.component";
-import { AllModules } from '@ag-grid-enterprise/all-modules';
+import {BotonesOpcionComponent} from "../botones/botonesOpcion.component";
+import {AllModules} from '@ag-grid-enterprise/all-modules';
 
 @Component({
   selector: 'app-tabla',
   templateUrl: './tabla.component.html',
   styleUrls: ['./tabla.component.scss']
 })
-export class TablaComponent implements OnInit {
+export class TablaComponent implements OnInit, AfterViewInit {
   public modules = AllModules;
 
   /** AG GRID */
@@ -58,6 +66,7 @@ export class TablaComponent implements OnInit {
   public prefacturasFiltrados: Observable<string[]>;
   /* Filtro de embarque */
   public estadosFiltrados: string[];
+  public errorEstados: boolean = false;
 
   /** ENUMERABLES */
   public estadosCatalogo = estadoCatalogoEnumEnum;
@@ -71,8 +80,7 @@ export class TablaComponent implements OnInit {
   private usuario: string;
   private pais: string;
   private rol: string;
-  public errorDates: boolean;
-  public errorMsg: string;
+  public fechasValidas: boolean = true;
 
 
   public tempPedidosFiltrados: Programacion[] = [];
@@ -96,7 +104,19 @@ export class TablaComponent implements OnInit {
 
   @ViewChildren("toggleElement") ref: QueryList<MatSlideToggle>;
 
+  ngAfterViewInit(): void {
+    /***
+     * COLOCAR EN CHECK TODOS ESTADOS
+     */
+    //debugger
+    setTimeout(() => {
+      this.estadosTodos();
+    },100);
+    //this.estadosTodos();
+  }
+
   ngOnInit(): void {
+    this.errorEstados = false;
     moment.locale('es');
     this.spinner = true;
 
@@ -107,40 +127,41 @@ export class TablaComponent implements OnInit {
 
     /* DEFINICION DE COLUMNAS */
     this.columnDefs = [
-      {field: 'planta', minWidth: 100},
-      {field: 'fechaTentativaEmbarque', headerName: 'Embarq. Tent.', minWidth: 100},
-      {field: 'pais', headerName: 'País Planta', minWidth: 100},
-      {field: 'refCliente', headerName: 'Ref. Cliente', minWidth: 100},
-      {field: 'fechaRequeridaCliente', headerName: 'Req. x Cliente', minWidth: 100},
-      {field: 'numeroReferenciaRepresentante', headerName: 'Ref. Rep', minWidth: 100},
-      {field: 'descripcionTamanoContenedor', headerName: 'Tam. Cont.', minWidth: 100},
-      {field: 'numeroFacturaSRI', headerName: 'Factura SRI', minWidth: 100},
-      {field: 'nombreCliente', headerName: 'Cliente', resizable: true, minWidth: 100},
-      {field: 'descripcionMarca', headerName: 'Marca', minWidth: 100},
-      {field: 'numeroCajas', headerName: 'Cajas', minWidth: 100},
-      {field: 'descripcionProducto', headerName: 'Producto', resizable: true, minWidth: 100},
-      {field: 'descripcionUnidadesCaja', headerName: 'Unid/Caja', minWidth: 100},
-      {field: 'nombrePuertoDestino', headerName: 'Destino', minWidth: 100},
-      {field: 'fechaTermino', headerName: 'Término', minWidth: 100},
-      {field: 'fechaFinCuarentena', headerName: 'Fin Cuarentena', minWidth: 100},
-      {field: 'fechaEtiquetadoFinal', headerName: 'Etiq. Final', minWidth: 100},
-      {field: 'fechaCarga', headerName: 'Carga', minWidth: 100},
+      {field: 'botones', minWidth: 100},
+      {field: 'planta', minWidth: 220, resizable: true},
+      {field: 'fechaTentativaEmbarque', headerName: 'Embarq. Tent.', minWidth: 120, resizable: true},
+      {field: 'pais', headerName: 'País Planta', minWidth: 120, resizable: true},
+      {field: 'refCliente', headerName: 'Ref. Cliente', minWidth: 120, resizable: true},
+      {field: 'fechaRequeridaCliente', headerName: 'Req. x Cliente', minWidth: 120, resizable: true},
+      {field: 'numeroReferenciaRepresentante', headerName: 'Ref. Rep', minWidth: 120, resizable: true},
+      {field: 'descripcionTamanoContenedor', headerName: 'Tam. Cont.', minWidth: 120, resizable: true},
+      {field: 'numeroFacturaSRI', headerName: 'Factura SRI', minWidth: 120, resizable: true},
+      {field: 'nombreCliente', headerName: 'Cliente', resizable: true, minWidth: 250},
+      {field: 'descripcionMarca', headerName: 'Marca', minWidth: 200, resizable: true},
+      {field: 'numeroCajas', headerName: 'Cajas', minWidth: 120, resizable: true},
+      {field: 'descripcionProducto', headerName: 'Producto', resizable: true, minWidth: 250},
+      {field: 'descripcionUnidadesCaja', headerName: 'Unid/Caja', minWidth: 120, resizable: true},
+      {field: 'nombrePuertoDestino', headerName: 'Destino', minWidth: 120, resizable: true},
+      {field: 'fechaTermino', headerName: 'Término', minWidth: 120, resizable: true},
+      {field: 'fechaFinCuarentena', headerName: 'Fin Cuarentena', minWidth: 120, resizable: true},
+      {field: 'fechaEtiquetadoFinal', headerName: 'Etiq. Final', minWidth: 120, resizable: true},
+      {field: 'fechaCarga', headerName: 'Carga', minWidth: 120, resizable: true},
       //{field: 'fechaTentativaEmbarque', headerName: 'Embarq. Tent.'},
-      {field: 'fechaRealEmbarque', headerName: 'Embarq. Real', minWidth: 100},
-      {field: 'fechaFacturacion', headerName: 'Fecha de Facturación', minWidth: 100},
-      {field: 'nombreNaviera', headerName: 'Naviera', minWidth: 100},
-      {field: 'nombreBuqueNaviera', headerName: 'Buque', minWidth: 100},
-      {field: 'identificadorContenedor', headerName: 'Nro. Contenedor', minWidth: 100},
-      {field: 'numeroBL', headerName: 'Nro. BL', minWidth: 100},
-      {field: 'estadoDetalle', headerName: 'Estado', minWidth: 100},
+      {field: 'fechaRealEmbarque', headerName: 'Embarq. Real', minWidth: 120, resizable: true},
+      {field: 'fechaFacturacion', headerName: 'Fecha de Facturación', minWidth: 120, resizable: true},
+      {field: 'nombreNaviera', headerName: 'Naviera', minWidth: 220, resizable: true},
+      {field: 'nombreBuqueNaviera', headerName: 'Buque', minWidth: 220, resizable: true},
+      {field: 'identificadorContenedor', headerName: 'Nro. Contenedor', minWidth: 120, resizable: true},
+      {field: 'numeroBL', headerName: 'Nro. BL', minWidth: 120, resizable: true},
+      {field: 'estadoDetalle', headerName: 'Estado', minWidth: 200, resizable: true},
       // { field: 'estadoProgramacion', headerName: 'Estado' },
-      {field: 'comentariosInaexpo', headerName: 'Comentarios', minWidth: 100},
-      {field: 'valorFlete', headerName: 'Flete Terrestre', minWidth: 100},
-      {field: 'nombrePuertoOrigen', headerName: 'Puerto Origen', minWidth: 100},
-      {field: 'fleteMaritimo', headerName: 'Flete Marítimo', minWidth: 100},
+      {field: 'comentariosInaexpo', headerName: 'Comentarios', minWidth: 300, resizable: true},
+      {field: 'valorFlete', headerName: 'Flete Terrestre', minWidth: 120, resizable: true},
+      {field: 'nombrePuertoOrigen', headerName: 'Puerto Origen', minWidth: 220, resizable: true},
+      {field: 'fleteMaritimo', headerName: 'Flete Marítimo', minWidth: 120, resizable: true},
     ];
 
-    this.columnDefs[0].cellRenderer = TrashButtonComponent;
+    this.columnDefs[0].cellRenderer = BotonesOpcionComponent;
     this.columnDefs[0].cellRendererParams = {
       clicked: (event: any, type: string) => {
         this.pedido = event.data;
@@ -161,7 +182,7 @@ export class TablaComponent implements OnInit {
       producto: new FormControl(),
       naviera: new FormControl(),
       marca: new FormControl(),
-      numeroContenedor: new FormControl(),
+      numeroContenedor: new FormControl(null, [Validators.required, Validators.minLength(4)]),
       prefactura: new FormControl(),
       destino: new FormControl(),
     });
@@ -210,6 +231,10 @@ export class TablaComponent implements OnInit {
     });
   }
 
+  public actualizarInfo(spinner: any) {
+    this.spinner = spinner;
+  }
+
   public onGridReady(params: any) {
     this.gridColumnApi = params.columnApi;
     this.gridApi = params.api;
@@ -243,7 +268,7 @@ export class TablaComponent implements OnInit {
     if ((valor == this.estados.TODOS && !checked) || (this.estadosFiltrados.length == 0)) {
       this.ref.forEach(x => x.checked = false);
       // this.pedidosFiltrados = [];
-      // this.estadosFiltrados = [];
+      this.estadosFiltrados = [];
     }
     // tempPedidosFiltrados.forEach(item => {
     //   if (this.estadosFiltrados.includes(item.estado)) {
@@ -272,6 +297,7 @@ export class TablaComponent implements OnInit {
   }
 
   private estadosTodos() {
+    this.estadosFiltrados = [];
     this.ref.forEach(x => x.checked = true);
     // Colocar todos los estados
     let estados = Object.keys(this.estados);
@@ -285,8 +311,6 @@ export class TablaComponent implements OnInit {
   }
 
   public aplicarFiltros() {
-    this.spinner = true;
-    this.pedidosFiltrados = [];
     //Iniciar con todos los pedidos
     // this.pedidosFiltrados = this.pedidosTodos;
     // Aplicar filtros
@@ -297,10 +321,10 @@ export class TablaComponent implements OnInit {
      * Validaciones
      */
     if (desde > hasta) {
-      this.errorDates = true;
-      this.errorMsg = 'Las fechas no son válidas';
+      this.fechasValidas = false;
       return;
     }
+    this.fechasValidas = true;
 
     //filtro Pais Planta
     let ppCodigo = this.filterForm.controls['paisPlanta'].value;
@@ -317,36 +341,57 @@ export class TablaComponent implements OnInit {
     let cli = this.util.nullOrEmpty(this.filterForm.controls['cliente'].value) ? 'TODOS' : this.filterForm.controls['cliente'].value;
     let nav = this.util.nullOrEmpty(this.filterForm.controls['naviera'].value) ? '*' : this.filterForm.controls['naviera'].value;
     let marca = this.util.nullOrEmpty(this.filterForm.controls['marca'].value) ? 'TODOS' : this.filterForm.controls['marca'].value;
+    if (this.filterForm.valid) {
+      this.spinner = true;
+      /** CONSULTAR PROGRAMACION */
+      let opciones: GetProgramacion = {};
+      opciones.porFecha = 'SI';
+      opciones.fechaDesde = moment(desde).format('L');
+      opciones.fechaHasta = moment(hasta).format('L');
+      opciones.estado = 'EMBARCADO';
+      opciones.codigoPais = this.filterForm.controls['paisPlanta'].value;
+      opciones.idContenedor = idc;
+      opciones.usuario = 'omoscoso';
+      opciones.codigoRepresentante = rep;
+      opciones.codigoCliente = cli;
+      opciones.codigoProducto = prod;
+      opciones.codigoNaviera = nav;
+      opciones.codigoMarca = marca;
 
-    /** CONSULTAR PROGRAMACION */
-    let opciones: GetProgramacion = {};
-    opciones.porFecha = 'SI';
-    opciones.fechaDesde = moment(desde).format('L');
-    opciones.fechaHasta = moment(hasta).format('L');
-    opciones.estado = 'EMBARCADO';
-    opciones.codigoPais = this.filterForm.controls['paisPlanta'].value;
-    opciones.idContenedor = idc;
-    opciones.usuario = 'omoscoso';
-    opciones.codigoRepresentante = rep;
-    opciones.codigoCliente = cli;
-    opciones.codigoProducto = prod;
-    opciones.codigoNaviera = nav;
-    opciones.codigoMarca = marca;
+      opciones = this.completarGetProgramacion(opciones);
 
-    opciones = this.completarGetProgramacion(opciones);
+      this.sinRegistro = '<h5>Cargando información...</h5>'
 
-    console.log('OPCIONES');
-    console.log(opciones);
+      let registros:any[] = [];
+      debugger
+      if(this.estadosFiltrados.length > 0) {
+        this.estadosFiltrados.forEach(x => {
+          opciones.estado = x;
+          registros.push(this._progService.getProgramacion(opciones));
+        });
+        this.pedidosFiltrados = [];
+        forkJoin(registros).pipe(finalize(() => {
+          this.sinRegistro = this.pedidosFiltrados.length == 0 ? '<h5>No existe información para estos filtros</h5>' : '';
+          this.spinner = false;
+        })).subscribe((result: any[]) => {
+          this.pedidosFiltrados = result[0].return;
+          for(var i=1; i<registros.length; i++){
+            const uno = result[i].return;
+            this.pedidosFiltrados = this.pedidosFiltrados.concat(uno);
+          }
+        });
+      }else{
+        this.errorEstados = true;
+      }
 
-    this.sinRegistro = '<h5>Cargando información...</h5>'
 
-    this._progService.getProgramacion(opciones).pipe(finalize(() => {
-      this.sinRegistro = this.pedidosFiltrados.length == 0 ? '<h5>No existe información para estos filtros</h5>' : '';
-      this.spinner = false;
-    })).subscribe((result: any) => {
-      this.pedidosFiltrados = result.return;
-    });
-
+      /*this._progService.getProgramacion(opciones).pipe(finalize(() => {
+        this.sinRegistro = this.pedidosFiltrados.length == 0 ? '<h5>No existe información para estos filtros</h5>' : '';
+        this.spinner = false;
+      })).subscribe((result: any) => {
+        this.pedidosFiltrados = result.return;
+      });*/
+    }
   }
 
   public onSelectionChanged(event: SelectionChangedEvent) {

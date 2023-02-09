@@ -101,7 +101,11 @@ html, body {
 .mat-form-field-appearance-fill .mat-form-field-flex{
   background-color: #fff !important;
 }
-
+mat-error.error-form{
+  font-size: 75% !important;
+  padding: 0 1em;
+  margin-top: -15px;
+}
 
 .mat-button.mat-success,
 .mat-stroked-button.mat-success,

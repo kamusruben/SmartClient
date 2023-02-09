@@ -61,6 +61,7 @@
                     </mat-form-field>
                   </div>
                 </div>
+                <mat-error class="error-form" *ngIf="!fechasValidas">Las fechas no son correctas</mat-error>
               </div>
               <!-- FILTRO PAIS PLANTA -->
               <div class="w-100">
@@ -188,6 +189,7 @@
                       {{cont}}
                     </mat-option>
                   </mat-autocomplete>
+                  <mat-error *ngIf="this.filterForm.get('numeroContenedor').invalid">Ingrese al menos 4 caracteres</mat-error>
                 </mat-form-field>
               </div>
               <!-- FILTRO PREFACTURA ADUANA -->
@@ -212,10 +214,11 @@
               </div>
               <!--              Chckbox-->
               <mat-label>Estado</mat-label>
-              <div class="mt-4 d-flex flex-column">
+              <div class="my-4 d-flex flex-column">
                 <mat-slide-toggle #toggleElement (change)="filtroEstado(estado.value, 'estado', $event.checked)"
                                   *ngFor="let estado of estados | keyvalue">{{estado.value}}</mat-slide-toggle>
               </div>
+              <mat-error class="error-form" *ngIf="errorEstados">Debe seleccionar al menos un estado</mat-error>
               <div class="my-3">
                 <!--                <div class="ps-2 mat-error small" *ngIf="errorDates">{{errorMsg}}</div>-->
                 <button class="me-2 w-50" mat-raised-button color="success" (click)="aplicarFiltros()">Buscar</button>
@@ -225,7 +228,7 @@
           </div>
         </mat-tab>
         <mat-tab label="Modificar Programacion">
-          <app-modificar [pedido]="pedido" [navieras]="navieras" [puertos]="puertos"></app-modificar>
+          <app-modificar [pedido]="pedido" [navieras]="navieras" [puertos]="puertos" (actualizarInfo)="actualizarInfo($event)"></app-modificar>
         </mat-tab>
       </mat-tab-group>
     </div>

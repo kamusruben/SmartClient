@@ -3,7 +3,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import { GetProgramacion } from 'src/app/util/custom-data-types/get-programacion';
 import { UtilFunctions } from 'src/app/util/functions/util-functions';
 import { Observable } from 'rxjs';
-import { Programacion } from 'src/app/util/custom-data-types/pedido';
+import {ModificarSimple, Programacion} from 'src/app/util/custom-data-types/pedido';
 
 @Injectable({
   providedIn: 'root'
@@ -42,5 +42,9 @@ export class ProgramacionService {
     `&e=${e}&f=${f}&g=${g}&h=${h}&i=${i}&j=${j}`+
     `&k=${k}&l=${l}&m=${m}&n=${n}&o=${o}&p=${p}`;
     return this.http.get<Programacion[]>(url);
+  }
+  actualizarInformacion(objeto: ModificarSimple){
+    const url = `${this.url}programacion/modificar-detalle/${objeto.codigoDetalleProgramacion}`;
+    return this.http.put(url,objeto);
   }
 }

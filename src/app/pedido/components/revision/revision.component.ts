@@ -15,7 +15,7 @@
 // import {MatDatepicker} from "@angular/material/datepicker";
 // import * as moment from 'moment';
 // import {AgGridCdt} from "../../../util/custom-data-types/ag-grid-cdt";
-// import { TrashButtonComponent } from "../botones/trash-button.component";
+// import { BotonesOpcionComponent } from "../botones/trash-button.component";
 // import { estadoProgramacionEnum } from "../../../util/enum/estadoProgramacion.enum";
 // import { estadoCatalogoEnumEnum  } from "../../../util/enum/estadoCatalogoEnum.enum";
 // import {MatSlideToggle} from "@angular/material/slide-toggle";
@@ -261,7 +261,7 @@
 //       },
 //     ];
 //     this.columnDefs = this.mockup.getColDefs();
-//     this.columnDefs[0].cellRenderer = TrashButtonComponent;
+//     this.columnDefs[0].cellRenderer = BotonesOpcionComponent;
 //     this.columnDefs[0].cellRendererParams= {
 //         clicked: (event: any, type: string) => {
 //           this.pedido = event.data;
