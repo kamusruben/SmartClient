@@ -3,7 +3,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import { GetProgramacion } from 'src/app/util/custom-data-types/get-programacion';
 import { UtilFunctions } from 'src/app/util/functions/util-functions';
 import { Observable } from 'rxjs';
-import {ModificarSimple, Programacion} from 'src/app/util/custom-data-types/pedido';
+import {ModificarMultiple, ModificarSimple, Programacion} from 'src/app/util/custom-data-types/pedido';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +18,7 @@ export class ProgramacionService {
     this.url = 'http://localhost:8181/smartclientapi/';
   }
 
-  getProgramacion(opciones: GetProgramacion): Observable<Programacion[]>{
-
+  consultarProgramacion(opciones: GetProgramacion): Observable<Programacion[]>{
     let a = opciones.porFecha;
     let b = opciones.fechaDesde;
     let c = opciones.fechaHasta;
@@ -43,8 +42,16 @@ export class ProgramacionService {
     `&k=${k}&l=${l}&m=${m}&n=${n}&o=${o}&p=${p}`;
     return this.http.get<Programacion[]>(url);
   }
+  borrarDetalle(idDetalle: number){
+    const url = `${this.url}programacion/eliminar/${idDetalle}`;
+    return this.http.delete(url)
+  }
   actualizarInformacion(objeto: ModificarSimple){
     const url = `${this.url}programacion/modificar-detalle/${objeto.codigoDetalleProgramacion}`;
+    return this.http.put(url,objeto);
+  }
+  actualizarInformacionMultiple(objeto: ModificarMultiple){
+    const url = `${this.url}programacion/modificar-detalle-mult`;
     return this.http.put(url,objeto);
   }
 }

@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule} from "@angular/forms";
 import {DateFormat} from "../app/util/pipes/date-format.pipe";
 import {AgGridModule} from "ag-grid-angular";
+import {OnlyNumbersDirective} from "./directives/only-numbers.directive";
 
 
 @NgModule({
   declarations: [
-    DateFormat
+    DateFormat,
+    OnlyNumbersDirective
   ],
   imports: [
     CommonModule,
@@ -17,6 +19,7 @@ import {AgGridModule} from "ag-grid-angular";
   exports: [
     ReactiveFormsModule,
     AgGridModule,
+    OnlyNumbersDirective,
     DateFormat
   ]
 })

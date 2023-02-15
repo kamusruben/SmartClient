@@ -67,6 +67,7 @@ export class TablaComponent implements OnInit, AfterViewInit {
   /* Filtro de embarque */
   public estadosFiltrados: string[];
   public errorEstados: boolean = false;
+  public errorForm: boolean = false;
 
   /** ENUMERABLES */
   public estadosCatalogo = estadoCatalogoEnumEnum;
@@ -117,6 +118,7 @@ export class TablaComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.errorEstados = false;
+    this.errorForm = false;
     moment.locale('es');
     this.spinner = true;
 
@@ -225,7 +227,7 @@ export class TablaComponent implements OnInit, AfterViewInit {
 
     opciones = this.completarGetProgramacion(opciones);
 
-    this._progService.getProgramacion(opciones).subscribe((result: any) => {
+    this._progService.consultarProgramacion(opciones).subscribe((result: any) => {
       this.pedidosFiltrados = result.return;
       this.spinner = false;
     });
@@ -294,6 +296,7 @@ export class TablaComponent implements OnInit, AfterViewInit {
     this.estadosTodos();
     // this.aplicarFiltros();
     this.estadosFiltrados = [];
+    this.ref.forEach(x => x.checked = false);
   }
 
   private estadosTodos() {
@@ -341,8 +344,9 @@ export class TablaComponent implements OnInit, AfterViewInit {
     let cli = this.util.nullOrEmpty(this.filterForm.controls['cliente'].value) ? 'TODOS' : this.filterForm.controls['cliente'].value;
     let nav = this.util.nullOrEmpty(this.filterForm.controls['naviera'].value) ? '*' : this.filterForm.controls['naviera'].value;
     let marca = this.util.nullOrEmpty(this.filterForm.controls['marca'].value) ? 'TODOS' : this.filterForm.controls['marca'].value;
+
     if (this.filterForm.valid) {
-      this.spinner = true;
+
       /** CONSULTAR PROGRAMACION */
       let opciones: GetProgramacion = {};
       opciones.porFecha = 'SI';
@@ -363,11 +367,12 @@ export class TablaComponent implements OnInit, AfterViewInit {
       this.sinRegistro = '<h5>Cargando información...</h5>'
 
       let registros:any[] = [];
-      debugger
+      this.errorForm = false;
       if(this.estadosFiltrados.length > 0) {
+        this.spinner = true;
         this.estadosFiltrados.forEach(x => {
           opciones.estado = x;
-          registros.push(this._progService.getProgramacion(opciones));
+          registros.push(this._progService.consultarProgramacion(opciones));
         });
         this.pedidosFiltrados = [];
         forkJoin(registros).pipe(finalize(() => {
@@ -383,14 +388,8 @@ export class TablaComponent implements OnInit, AfterViewInit {
       }else{
         this.errorEstados = true;
       }
-
-
-      /*this._progService.getProgramacion(opciones).pipe(finalize(() => {
-        this.sinRegistro = this.pedidosFiltrados.length == 0 ? '<h5>No existe información para estos filtros</h5>' : '';
-        this.spinner = false;
-      })).subscribe((result: any) => {
-        this.pedidosFiltrados = result.return;
-      });*/
+    }else{
+      this.errorForm = true;
     }
   }
 

@@ -131,7 +131,7 @@ export interface Programacion {
 
 export interface ModificarSimple {
   codigoDetalleProgramacion: number,
-  numeroFacturaBaan?: number,
+  numeroFacturaBaan?: string,
   fechaEmbarque?: string,
   esFechaRealEmbarque?: boolean,
   estado?: string,
@@ -143,17 +143,17 @@ export interface ModificarSimple {
   valorFlete?: number,
   fechaFacturacion?: string,
   fleteMaritimo?: number,
-  codigoNaviera?: number,
-  codigoPuertoDestino?: number,
+  codigoNaviera?: string,
+  codigoPuertoDestino?: string,
   dae?: string,
   camposModificados?: string,
 }
 
 export interface ModificarMultiple {
-  codigoDetalleProgramacion: number[],
+  codigoDetalleProgramacion: string[],
   actualizaNumeroFactura?: boolean,
-  numeroFacturaAnterior?: number,
-  numeroFacturaBaan?: number,
+  numeroFacturaAnterior?: string,
+  numeroFacturaBaan?: string,
   fechaEmbarque?: string,
   esFechaRealEmbarque?: boolean,
   estado?: string,
@@ -165,13 +165,13 @@ export interface ModificarMultiple {
   valorFlete?: number,
   fechaFacturacion?: string,
   fleteMaritimo?: number,
-  codigoNaviera?: number,
-  codigoPuertoDestino?: number,
+  codigoNaviera?: string,
+  codigoPuertoDestino?: string,
   nombreBuqueNaviera?: string,
   actulizaCampoPorContenedor?: boolean,
   numeroContenedorClienteDescripcion?: string,
-  codigoPuertoOrigen?: number,
-  numeroFacturaSRI?: number,
+  codigoPuertoOrigen?: string,
+  numeroFacturaSRI?: string,
   dae?: string,
   camposModificados?: string
 }
