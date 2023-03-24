@@ -8,6 +8,8 @@ import {CatalogosService} from "../../services/catalogos.service";
 import {estadoCatalogoEnumEnum} from "../../../util/enum/estadoCatalogoEnum.enum";
 import {ProgramacionService} from "../../services/programacion.service";
 import Swal from 'sweetalert2';
+import {MatDialog} from "@angular/material/dialog";
+import {EspecificacionComponent} from "../especificacion/especificacion.component";
 
 @Component({
   selector: 'app-modificar',
@@ -39,10 +41,12 @@ export class ModificarComponent implements OnInit, OnChanges {
   private multiple: ModificarMultiple;
   public errorEstados: boolean = false;
   public mensajeError: string = 'Debe seleccionar al menos un Estado';
-
+  public ids: string[] = [];
+  public real: boolean = false;
   constructor(private fb: FormBuilder,
               private _catalogoSevice: CatalogosService,
-              private _programacionService: ProgramacionService) {
+              private _programacionService: ProgramacionService,
+              private _dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -62,7 +66,7 @@ export class ModificarComponent implements OnInit, OnChanges {
       prefactura: new FormControl(null, null),
       sri: new FormControl(null, null),
       fechaFacturacion: new FormControl(null, Validators.required),
-      fechaEmbarque: new FormControl(null, Validators.required),
+      fechaEmbarque: new FormControl(null),
       naviera: new FormControl(null, null),
       buque: new FormControl(null, null),
       fleteMaritimo: new FormControl(null, [Validators.required, Validators.pattern(numRegex)]),
@@ -71,6 +75,7 @@ export class ModificarComponent implements OnInit, OnChanges {
       comentarios: new FormControl(null, null),
       fechaReal: new FormControl(null, Validators.required)
     });
+
   }
 
   // Valor del flete es obligatorio
@@ -80,24 +85,49 @@ export class ModificarComponent implements OnInit, OnChanges {
 
 
   ngOnChanges(changes: SimpleChanges) {
+    this.ids = [];
+    this.seleccionados.forEach(x => this.ids.push(x.codigoDetalleProgramacion));
     if (changes.pedido && !changes.pedido.firstChange) {
       this.mostrarFormulario = true;
       this.errorEstados = false;
 
       this.pedido = changes.pedido.currentValue;
-
-      this.editForm.controls.fechaReal.setValue(1);
-
       const puerto = this.puertos.find(x => x.codigo == this.pedido.codigoPuertoOrigen);
+      const naviera = this.navieras.find(x => x.codigo == this.pedido.codigoNaviera);
+
+      //this.editForm.controls.fechaReal.setValue(1);
+      /* ASIGNACION DE INFORMACIÓN AL FORMULARIO */
+      this.editForm.controls.naviera.setValue(naviera.codigo);
       this.editForm.controls.puerto.setValue(puerto.codigo);
 
-      const naviera = this.navieras.find(x => x.codigo == this.pedido.codigoNaviera);
-      this.editForm.controls.naviera.setValue(naviera.codigo);
-
+      const ff = this.pedido.fechaFacturacion != '' ? this.toDate(this.pedido.fechaFacturacion): null;
+      const fre = this.pedido.fechaRealEmbarque != '' ? this.toDate(this.pedido.fechaRealEmbarque): null;
+      //const fte = this.pedido.fechaTentativaEmbarque != '' ? this.toDate(this.pedido.fechaTentativaEmbarque): null;
+      if(this.pedido.fechaRealEmbarque != ""){
+        this.real = true;
+        this.editForm.controls.fechaReal.setValue('1');
+      }else{
+        this.real = false;
+        this.editForm.controls.fechaReal.setValue('0');
+      }
+      if(fre) {
+        this.editForm.controls.fechaEmbarque.setValue(fre);
+      }
+      this.editForm.controls.fechaFacturacion.setValue(ff);
+      this.editForm.controls.fleteMaritimo.setValue(this.pedido.fleteMaritimo);
+      this.editForm.controls.fleteTerrestre.setValue(this.pedido.valorFlete);
     }
   }
 
-  actualizar() {
+  private toDate(fecha: string){
+    const partes = fecha.split('/');
+    const anio = parseInt(partes[2]);
+    const mes = parseInt(partes[1])-1;
+    const dia = parseInt(partes[0]);
+    return new Date(anio,mes,dia);
+  }
+
+  public actualizar() {
     this.errorEstados = false;
     if(this.seleccionados.length < 1){
       this.mensajeError = 'Seleccione al menos un Registro';
@@ -106,83 +136,63 @@ export class ModificarComponent implements OnInit, OnChanges {
     if (this.editForm.valid) {
       if(this.seleccionados.length > 1){
         let indices = this.seleccionados.map(x=> x.codigoDetalleProgramacion);
-        this.multiple = {
-          codigoDetalleProgramacion: indices,
-          actualizaNumeroFactura: false,
-          numeroFacturaAnterior: this.seleccionados[0].numeroFacturaBaan,
-          numeroFacturaBaan: this.seleccionados[0].numeroFacturaBaan,
-          fechaEmbarque: moment(this.editForm.controls.fechaEmbarque.value).format('DD/MM/YYYY'),
-          esFechaRealEmbarque: true,
-          estado: this.seleccionados[0].estadoDetalle,
-          nombreBuque: this.editForm.controls.buque.value,
-          comentariosInaexpo: this.editForm.controls.comentarios.value,
-          numeroContenedor: this.editForm.controls.contenedor.value,
-          numeroSellos: this.editForm.controls.sello.value,
-          numeroBL: this.editForm.controls.bl.value,
-          valorFlete: this.editForm.controls.fleteTerrestre.value,
-          fechaFacturacion: moment(this.editForm.controls.fechaFacturacion.value).format('DD/MM/YYYY'),
-          fleteMaritimo: this.editForm.controls.fleteMaritimo.value,
-          codigoNaviera: this.seleccionados[0].codigoNaviera,
-          codigoPuertoDestino: this.seleccionados[0].codigoPuertoDestino,
-          nombreBuqueNaviera: this.editForm.controls.buque.value,
-          actulizaCampoPorContenedor: true,
-          numeroContenedorClienteDescripcion: this.seleccionados[0].numeroContenedorClienteDescripcion,
-          codigoPuertoOrigen: this.seleccionados[0].codigoPuertoOrigen,
-          numeroFacturaSRI: this.seleccionados[0].numeroFacturaSRI,
-          dae: this.seleccionados[0].dae,
-          camposModificados: ''
-        };
-        this.actualizarInfo.emit(true);
-        let msgError = '';
-        this._programacionService.actualizarInformacionMultiple(this.multiple)
-          .subscribe((result: any) => {
-            switch (result.return){
-              case 0:
-                break;
-              case 1:
-                msgError = 'Detalle de Programación no encontrado';
-                break;
-              case 2:
-                msgError = 'Factura BAAN pertenece a otro pedido';
-                break;
-              case 3:
-                msgError = 'Pedido ya enviado';
-                break;
-              case 4:
-                msgError = 'Contenedor Pedido estado ON HOLD';
-                break;
-              case 5:
-                msgError = 'Pedido siguiente ya enviado';
-                break;
-              case 6:
-                msgError = 'Contenedo Pedido siguiente Estado ON HOLD';
-                break;
-              case 7:
-                msgError = 'Factura BAAN ya existe';
-                break;
-              default:
-                msgError = 'Error general';
-                break;
-            }
-            if(result.return > 0){
-              Swal.fire({
-                icon: 'error',
-                title: msgError,
-                confirmButtonText: 'Entiendo!',
-                confirmButtonColor: '#224668'
-              });
+        /*VALIDACIONES MULTIPLES*/
+        let buque = this.seleccionados[0].nombreBuqueNaviera;
+        let mismoBuque = true;
+
+
+        let referencia = this.seleccionados[0].numeroReferenciaRepresentante;
+        let referencias = '<li>'+this.seleccionados[0].numeroReferenciaRepresentante+'</li>';
+        let mismaReferencia =  true;
+        this.seleccionados.forEach(x => {
+          if(x.nombreBuqueNaviera != buque){
+            mismoBuque = false;
+          }
+          if(x.numeroReferenciaRepresentante != referencia){
+            referencias += '<li>'+x.numeroReferenciaRepresentante+'</li>';
+            mismaReferencia = false;
+          }
+        });
+        if(!mismoBuque){
+          Swal.fire({
+            icon: 'error',
+            title: 'Existió un error',
+            text: 'Los detalles seleccionados no son del mismo grupo: BUQUE',
+            confirmButtonText: 'Entiendo!',
+            confirmButtonColor: '#224668'
+          });
+          this.actualizarInfo.emit(false);
+          return;
+        }
+        const sas = '<ul>'+referencias+'</ul>';
+        if(!mismaReferencia){
+          Swal.fire({
+            icon: 'question',
+            html: '<div class="text-start ps-4">Usted está uniendo la(s) referencia(s) Num. '+sas+'<br>Esta seguro?</div>',
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: 'Confirmar',
+            denyButtonText: 'Cancelar',
+            confirmButtonColor: '#224668',
+            denyButtonColor: '#DD3333',
+
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.actualiarMultiple(indices);
             }
             this.actualizarInfo.emit(false);
-        }, (err) => {
-            console.log(err);
           });
+          return;
+        }else{
+          this.actualiarMultiple(indices);
+        }
       }else {
         this.simple = {
           codigoDetalleProgramacion: parseInt(this.pedido.codigoDetalleProgramacion),
           numeroFacturaBaan: this.pedido.numeroFacturaBaan,
           fechaEmbarque: moment(this.editForm.controls.fechaEmbarque.value).format('DD/MM/YYYY'),
-          esFechaRealEmbarque: false,
-          estado: this.pedido.estadoDetalle,
+          esFechaRealEmbarque: this.editForm.controls.fechaReal.value == 1 ? true : false,
+          estado: this.editForm.controls.estado.value ? 'ON HOLD' : this.pedido.estadoDetalle,
           nombreBuque: this.editForm.controls.buque.value,
           comentariosInaexpo: this.editForm.controls.comentarios.value,
           numeroContenedor: this.editForm.controls.contenedor.value,
@@ -211,21 +221,165 @@ export class ModificarComponent implements OnInit, OnChanges {
 
         this.actualizarInfo.emit(true);
         this._programacionService.actualizarInformacion(this.simple).subscribe((result: any) => {
+          let msgText = '';
+          switch (result.return){
+            case 0:
+              Swal.fire({
+                title: 'Correcto',
+                icon: "success",
+                text: 'Información actualizada correctamente',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#224668',
+                showCloseButton: true,
+                showCancelButton: false,
+                showConfirmButton: true,
+                showDenyButton: false,
+              });
+              break;
+            case -1:
+              msgText = 'Consulte al administrador';
+              break;
+            case 1:
+              msgText = 'Detalle de programación no encontrado';
+              break;
+            case 2:
+              msgText = 'Factura BAAN pertenece a otro pedido';
+              break;
+            case 3:
+              msgText = 'Pedido ya enviado';
+              break;
+            case 4:
+              msgText = 'Pedido siguiente ya enviado';
+              break;
+            case 5:
+              msgText = 'Pedido estado ON HOLD';
+              break;
+            case 6:
+              msgText = 'Pedido siguiente estado ON HOLD';
+              break;
+            default:
+              msgText = 'Error general, consulte con el Administrador';
+              break;
+          }
+          if(result.return != 0){
+            Swal.fire({
+              icon: 'error',
+              title: 'Existió un error',
+              text: msgText,
+              confirmButtonText: 'Entiendo!',
+              confirmButtonColor: '#224668'
+            });
+          }
           this.actualizarInfo.emit(false);
         });
       }
     }else{
       this.errorEstados = true;
-      this.mensajeError = 'Debe seleccionar al menos un estado';
+      this.mensajeError = 'Complete los datos del formulario';
     }
+  }
+
+  private actualiarMultiple(indices: any){
+    this.multiple = {
+      codigoDetalleProgramacion: indices,
+      actualizaNumeroFactura: false,
+      numeroFacturaAnterior: this.seleccionados[0].numeroFacturaBaan,
+      numeroFacturaBaan: this.seleccionados[0].numeroFacturaBaan,
+      fechaEmbarque: moment(this.editForm.controls.fechaEmbarque.value).format('DD/MM/YYYY'),
+      esFechaRealEmbarque: this.editForm.controls.fechaReal.value == 1 ? true : false,
+      estado: this.editForm.controls.estado.value ? 'ON HOLD' : this.seleccionados[0].estadoProgramacion,
+      nombreBuque: this.editForm.controls.buque.value,
+      comentariosInaexpo: this.editForm.controls.comentarios.value,
+      numeroContenedor: this.editForm.controls.contenedor.value,
+      numeroSellos: this.editForm.controls.sello.value,
+      numeroBL: this.editForm.controls.bl.value,
+      valorFlete: this.editForm.controls.fleteTerrestre.value,
+      fechaFacturacion: moment(this.editForm.controls.fechaFacturacion.value).format('DD/MM/YYYY'),
+      fleteMaritimo: this.editForm.controls.fleteMaritimo.value,
+      codigoNaviera: this.seleccionados[0].codigoNaviera,
+      codigoPuertoDestino: this.seleccionados[0].codigoPuertoDestino,
+      nombreBuqueNaviera: this.editForm.controls.buque.value,
+      actulizaCampoPorContenedor: true,
+      numeroContenedorClienteDescripcion: this.seleccionados[0].numeroContenedorClienteDescripcion,
+      codigoPuertoOrigen: this.seleccionados[0].codigoPuertoOrigen,
+      numeroFacturaSRI: this.seleccionados[0].numeroFacturaSRI,
+      dae: this.seleccionados[0].dae,
+      camposModificados: ''
+    };
+    this.actualizarInfo.emit(true);
+    let msgText = '';
+    this._programacionService.actualizarInformacionMultiple(this.multiple)
+      .subscribe((result: any) => {
+        switch (result.return){
+          case 0:
+            Swal.fire({
+              title: 'Correcto',
+              icon: "success",
+              text: 'Información actualizada correctamente',
+              confirmButtonText: 'OK',
+              confirmButtonColor: '#224668',
+              showCloseButton: true,
+              showCancelButton: false,
+              showConfirmButton: true,
+              showDenyButton: false,
+            });
+            break;
+          case -1:
+            msgText = 'Consulte al administrador';
+            break;
+          case 1:
+            msgText = 'Detalle de programación no encontrado';
+            break;
+          case 2:
+            msgText = 'Factura BAAN pertenece a otro pedido';
+            break;
+          case 3:
+            msgText = 'Pedido ya enviado';
+            break;
+          case 4:
+            msgText = 'Pedido siguiente ya enviado';
+            break;
+          case 5:
+            msgText = 'Pedido estado ON HOLD';
+            break;
+          case 6:
+            msgText = 'Pedido siguiente estado ON HOLD';
+            break;
+          default:
+            msgText = 'Error general, consulte con el Administrador';
+            break;
+        }
+        if(result.return != 0){
+          Swal.fire({
+            icon: 'error',
+            title: 'Existió un error',
+            text: msgText,
+            confirmButtonText: 'Entiendo!',
+            confirmButtonColor: '#224668'
+          });
+        }
+        this.actualizarInfo.emit(false);
+      }, (err) => {
+        console.log(err);
+      });
+  }
+  public factura(){
+    console.log('Consumiendo servicio factura');
+    // this._programacionService.mostrarFactura(this.pedido.numeroFacturaBaan,this.pedido.fechaTentativaEmbarque, this.pedido.numeroFacturaBaan,this.pedido.descripcionFormaPago);
+    this._programacionService.mostrarFactura(this.pedido.numeroFacturaBaan,this.pedido.fechaTentativaEmbarque,'FEU100','200')
+      .subscribe((rsp: any) => {
+        let fileName = 'Factura-'+this.pedido.numeroFacturaBaan+'.xlsx';
+        let blob: Blob = rsp.body as Blob;
+        let a = document.createElement('a');
+        a.download = fileName;
+        a.href = window.URL.createObjectURL(blob);
+        a.click();
+      });
   }
 
   validateForm() {
     return true;
   }
 
-  changeValue(value: any) {
-    console.log(value.id)
-  }
 
 }

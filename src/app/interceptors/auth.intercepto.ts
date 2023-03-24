@@ -21,6 +21,7 @@ export class AuthInterceptor implements HttpInterceptor {
         if(errorCode >= 500 && errorCode <= 599){
           mensaje = 'Error de Servidor';
         }
+        debugger
         switch(err.status){
           case 400:
             mensaje = 'Solicitud fallida';
@@ -43,9 +44,22 @@ export class AuthInterceptor implements HttpInterceptor {
             mensaje = 'Tiempo de espera superado';
             texto = 'Error: 408';
             break;
+          case 503:
+            mensaje = 'Servicio no disponible, vuelva a intentarlo';
+            texto = 'Error: 503';
+            break;
+          case 504:
+            mensaje = 'Tiempo de espera excedido, intente otra consulta';
+            texto = 'Error: 504';
+            break;
           default:
             mensaje = 'Error no controlado';
-            texto = 'Error ' + errorCode + ' ' + err.message;
+            if(err.name == "HttpErrorResponse" && err.error.timeStamp > 40000){
+              mensaje = 'Tiempo de espera superado';
+              texto = 'Se ha excedido el tiempo máximo de espera, intente otra consulta';
+            }else{
+              texto = 'Error ' + errorCode + ' ' + err.message;
+            }
             break;
         }
         Swal.fire({

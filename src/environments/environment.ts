@@ -3,7 +3,11 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  smartClientApi: 'https://cdscdes.pronaca.com/smartclientapi/',
+  //smartClientApi:'http://localhost:8181/smartclientapi/',
+  rolCoordinador: 'COORDINADOR'
+
 };
 
 /*

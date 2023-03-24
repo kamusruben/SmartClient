@@ -35,7 +35,11 @@
       <mat-tab-group mat-align-tabs="start" class="max-height" #tabGroup>
         <mat-tab label="Buscar">
           <div class="px-2">
+            <div class="fw-bold my-3">Criterios de búsqueda</div>
             <form [formGroup]="filterForm">
+              <div>
+                <mat-checkbox color="primary" formControlName="fechaTentativa">Fecha tentativa embarque:</mat-checkbox>
+              </div>
               <!--              DATEPICKER -->
               <div class="d-flex flex-column my-3 pb-3 filtro-embarque">
                 <label>Tentativa de embarque</label>
@@ -61,7 +65,7 @@
                     </mat-form-field>
                   </div>
                 </div>
-                <mat-error class="error-form" *ngIf="!fechasValidas">Las fechas no son correctas</mat-error>
+                <mat-error class="error-form" *ngIf="!fechasValidas || !fechasMaximas">{{errorFechas}}</mat-error>
               </div>
               <!-- FILTRO PAIS PLANTA -->
               <div class="w-100">
@@ -74,12 +78,11 @@
                     <mat-option *ngFor="let pais of paises"
                                 value="{{pais.codigo}}">{{pais.descripcion}}</mat-option>
                   </mat-select>
-                  <!--                  <mat-hint>Errors appear instantly!</mat-hint>-->
-                  <!--                  <mat-error *ngIf="selected.hasError('required')">Debe seleccionar un valor</mat-error>-->
+                  <mat-error *ngIf="this.filterForm.get('paisPlanta').invalid">El país es requerido</mat-error>
                 </mat-form-field>
               </div>
               <!-- FILTRO REPRESENTANTE-->
-              <div class="w-100">
+              <div class="w-100 mt-2">
                 <mat-form-field class="w-100 py-0 my-0" appearance="fill">
                   <mat-label>Representante</mat-label>
                   <!--                  Filtrado uno a uno-->
@@ -93,9 +96,9 @@
                   <!--                  <mat-error *ngIf="selected.hasError('required')">Debe seleccionar un valor</mat-error>-->
                 </mat-form-field>
               </div>
-              <br/>
+              <mat-divider class="my-3"></mat-divider>
               <!-- FILTRO CLIENTE-->
-              <div class="w-100">
+              <div class="w-100 mt-2">
                 <mat-form-field class="w-100 py-0 my-0" appearance="fill">
                   <mat-label>Cliente</mat-label>
                   <!--                  Filtrado uno a uno-->
@@ -171,6 +174,21 @@
                   <!--                  <mat-error *ngIf="selected.hasError('required')">Debe seleccionar un valor</mat-error>-->
                 </mat-form-field>
               </div>
+              <!-- FILTRO DESTINO -->
+              <div class="w-100">
+                <mat-form-field class="w-100 py-0 my-0" appearance="fill">
+                  <mat-label>Destino</mat-label>
+                  <!--                  Filtrado uno a uno-->
+                  <!--                  <mat-select formControlName="estado" (selectionChange)="filtro($event,'naviera')">-->
+                  <mat-select formControlName="puerto">
+                    <mat-option value="TODOS"><strong>TODOS</strong></mat-option>
+                    <mat-option *ngFor="let dest of puertos"
+                                value="{{dest.codigo}}">{{dest.nombre}}</mat-option>
+                  </mat-select>
+                  <!--                  <mat-hint>Errors appear instantly!</mat-hint>-->
+                  <!--                  <mat-error *ngIf="selected.hasError('required')">Debe seleccionar un valor</mat-error>-->
+                </mat-form-field>
+              </div>
               <!-- FILTRO CONTENEDOR -->
               <div class="my-0">
                 <mat-form-field class="w-100 py-0 my-0" appearance="fill">
@@ -189,7 +207,7 @@
                       {{cont}}
                     </mat-option>
                   </mat-autocomplete>
-                  <mat-error *ngIf="this.filterForm.get('numeroContenedor').invalid">Ingrese al menos 4 caracteres</mat-error>
+<!--                  <mat-error *ngIf="this.filterForm.get('numeroContenedor').invalid">Ingrese al menos 4 caracteres</mat-error>-->
                 </mat-form-field>
               </div>
               <!-- FILTRO PREFACTURA ADUANA -->
@@ -215,15 +233,16 @@
               <!--              Chckbox-->
               <mat-label>Estado</mat-label>
               <div class="my-4 d-flex flex-column">
-                <mat-slide-toggle #toggleElement (change)="filtroEstado(estado.value, 'estado', $event.checked)"
+                <mat-slide-toggle [name]="estado.value" #toggleElement (change)="filtroEstado(estado.value, 'estado', $event.checked)"
                                   *ngFor="let estado of estados | keyvalue">{{estado.value}}</mat-slide-toggle>
               </div>
               <mat-error class="error-form" *ngIf="errorEstados">Debe seleccionar al menos un estado</mat-error>
-              <div class="my-3">
+              <div class="my-3 d-flex flex-row justify-content-start">
                 <!--                <div class="ps-2 mat-error small" *ngIf="errorDates">{{errorMsg}}</div>-->
                 <mat-error class="error-form mb-2" *ngIf="errorForm">Complete todos los campos requeridos</mat-error>
-                <button class="me-2 w-25" mat-raised-button color="primary" (click)="aplicarFiltros()">Buscar</button>
-                <button class="w-25" mat-raised-button color="success" (click)="limpiarFiltros()">Limpiar</button>
+                <button class="me-2" mat-raised-button color="primary" (click)="aplicarFiltros()">Buscar</button>
+                <button class="me-2" mat-raised-button color="success" (click)="limpiarFiltros()">Limpiar</button>
+                <button class="w-50" mat-raised-button color="primary" (click)="especificaciones()" [disabled]="pedidosSeleccionados.length != 1">Ver Especificaciones</button>
               </div>
             </form>
           </div>

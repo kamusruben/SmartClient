@@ -1,0 +1,47 @@
+<div class="d-flex justify-content-end">
+  <div (click)="regresar()" class="pointer"><i class="fa fa-close"></i></div>
+</div>
+<h1 mat-dialog-title class="text-success">Especificaciones del Item</h1>
+<div class="row border-bottom">
+  <div class="fw-bold col">Nº de item:</div>
+  <div class="col border-start">{{data.codigoDetalleProgramacion}}</div>
+</div>
+<div class="row border-bottom">
+  <div class="fw-bold col">Tipo de tapa:</div>
+  <div class="col border-start">{{data.descripcionTipoTapa}}</div>
+</div>
+<div class="row border-bottom">
+  <div class="fw-bold col">Embalaje:</div>
+  <div class="col border-start">{{data.descripcionTipoEmbalaje}}</div>
+  <div class="fw-bold col border-start">Unidades por caja:</div>
+  <div class="col border-start">{{data.descripcionUnidadesCaja}}</div>
+</div>
+<div class="row border-bottom">
+  <div class="fw-bold col">Termoencogible:</div>
+  <div class="col border-start">{{data.descripcionTermoencogiblePack}}</div>
+  <div class="fw-bold col border-start">Packs por:</div>
+  <div class="col border-start">{{data.codigoTermoencogiblePack}}</div>
+</div>
+<div class="row border-bottom">
+  <div class="fw-bold col">Tipo de carga:</div>
+  <div class="col border-start">{{data.descripcionTipoCarga}}</div>
+</div>
+<div class="row border-bottom">
+  <div class="fw-bold col">Tipo de codificado:</div>
+  <div class="col border-start">{{data.descripcionTipoCodificado}}</div>
+</div>
+<div class="row border-bottom">
+  <div class="fw-bold col">Markings:</div>
+  <div class="col border-start">{{data.descripcionTipoMarking}}</div>
+</div>
+<div class="row border-bottom">
+  <div class="fw-bold col">Observaciones markings:</div>
+  <div class="col border-start">{{data.observacionesMarkings}}</div>
+</div>
+<div class="row border-bottom">
+  <div class="fw-bold col">Observaciones generales:</div>
+  <div class="col border-start">{{data.observacionesGenerales}}</div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button color="success" (click)="regresar()"><i class="fa fa-arrow-left"></i> Regresar</button>
+</div>

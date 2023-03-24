@@ -30,35 +30,48 @@ export class BotonesOpcionComponent implements ICellRendererAngularComp {
     console.log('event');
     console.log(event);
     console.log(this.params);
-    Swal.fire({
-      title: '¿Está seguro de eliminar este regisrto?',
-      showDenyButton: true,
-      showCancelButton: false,
-      confirmButtonText: 'Confirmar',
-      denyButtonText: 'Cancelar',
-      confirmButtonColor: '#224668',
-      denyButtonColor: '#DD3333',
-      icon: "question"
-    }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
-      if (result.isConfirmed) {
-        // Swal.fire('Saved!', '', 'success')
-        //this.params.clicked(this.params, 'remove')
-        // this._programacionService.borrarDetalle(this.params.data.codigoProgramacion)
-        this._programacionService.borrarDetalle(this.params.data.codigoDetalleProgramacion)
-          .subscribe(() => {
-            Swal.fire({
-              icon: 'success',
-              title: 'Registro eliminado con éxito',
-              confirmButtonText: 'Listo!',
-              confirmButtonColor: '#224668'
-            });
-          });
-      } else if (result.isDenied) {
-        //Swal.fire('Changes are not saved', '', 'info')
+    this._programacionService.validarBorrado(this.params.data.codigoProgramacion).subscribe((rsp)=>{
+      if(rsp){
+        Swal.fire({
+          title: '¿Está seguro de eliminar este regisrto?',
+          showDenyButton: true,
+          showCancelButton: false,
+          confirmButtonText: 'Confirmar',
+          denyButtonText: 'Cancelar',
+          confirmButtonColor: '#224668',
+          denyButtonColor: '#DD3333',
+          icon: "question"
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+          if (result.isConfirmed) {
+            // Swal.fire('Saved!', '', 'success')
+            //this.params.clicked(this.params, 'remove')
+            // this._programacionService.borrarDetalle(this.params.data.codigoProgramacion)
+            this._programacionService.borrarDetalle(this.params.data.codigoDetalleProgramacion)
+              .subscribe(() => {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Registro eliminado con éxito',
+                  confirmButtonText: 'Listo!',
+                  confirmButtonColor: '#224668'
+                });
+              });
+          } else if (result.isDenied) {
+            //Swal.fire('Changes are not saved', '', 'info')
+          }
+        });
+      }else{
+        Swal.fire({
+          title: 'No se puede eliminar',
+          text: 'La programación tiene varios contenedores',
+          showConfirmButton: false,
+          showCancelButton: true,
+          cancelButtonText: 'Entendido',
+          cancelButtonColor:'#DD3333',
+          icon: "warning"
+        })
       }
-    })
-
+    });
   }
 
 }

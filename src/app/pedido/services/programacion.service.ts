@@ -4,6 +4,7 @@ import { GetProgramacion } from 'src/app/util/custom-data-types/get-programacion
 import { UtilFunctions } from 'src/app/util/functions/util-functions';
 import { Observable } from 'rxjs';
 import {ModificarMultiple, ModificarSimple, Programacion} from 'src/app/util/custom-data-types/pedido';
+import {environment} from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class ProgramacionService {
   constructor(
     private http: HttpClient
   ) {
-    this.url = 'http://localhost:8181/smartclientapi/';
+    this.url = environment.smartClientApi;
   }
 
   consultarProgramacion(opciones: GetProgramacion): Observable<Programacion[]>{
@@ -42,9 +43,13 @@ export class ProgramacionService {
     `&k=${k}&l=${l}&m=${m}&n=${n}&o=${o}&p=${p}`;
     return this.http.get<Programacion[]>(url);
   }
-  borrarDetalle(idDetalle: number){
-    const url = `${this.url}programacion/eliminar/${idDetalle}`;
+  borrarDetalle(idProgramacion: number){
+    const url = `${this.url}programacion/eliminar/${idProgramacion}`;
     return this.http.delete(url)
+  }
+  validarBorrado(idProgramacion: number){
+    const url = `${this.url}programacion/validation/?c=${idProgramacion}`;
+    return this.http.get(url)
   }
   actualizarInformacion(objeto: ModificarSimple){
     const url = `${this.url}programacion/modificar-detalle/${objeto.codigoDetalleProgramacion}`;
@@ -53,5 +58,9 @@ export class ProgramacionService {
   actualizarInformacionMultiple(objeto: ModificarMultiple){
     const url = `${this.url}programacion/modificar-detalle-mult`;
     return this.http.put(url,objeto);
+  }
+  mostrarFactura(numeroFactura: string, fechaTentativaEmbarque: string, numeroFue: string, comisionAgente: string){
+    const url = `${this.url}programacion/excel/?p=${numeroFactura}&q=${fechaTentativaEmbarque}&r=${numeroFue}&s=${comisionAgente}`;
+      return this.http.get(url,{observe: "response", responseType:"blob"});
   }
 }
