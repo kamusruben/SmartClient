@@ -23,6 +23,7 @@ export class ModificarComponent implements OnInit, OnChanges {
   @Input() navieras: Catalogo[];
   @Input() puertos: Catalogo[];
   @Output() actualizarInfo: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() aplicarFiltros: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   public currentTime = moment();
   //public navieras: Catalogo[];
@@ -42,7 +43,7 @@ export class ModificarComponent implements OnInit, OnChanges {
   public errorEstados: boolean = false;
   public mensajeError: string = 'Debe seleccionar al menos un Estado';
   public ids: string[] = [];
-  public real: boolean = false;
+  public real: string = '0';
   constructor(private fb: FormBuilder,
               private _catalogoSevice: CatalogosService,
               private _programacionService: ProgramacionService,
@@ -65,7 +66,7 @@ export class ModificarComponent implements OnInit, OnChanges {
       estado: new FormControl(null,null),
       prefactura: new FormControl(null, null),
       sri: new FormControl(null, null),
-      fechaFacturacion: new FormControl(null, Validators.required),
+      fechaFacturacion: new FormControl(null),
       fechaEmbarque: new FormControl(null),
       naviera: new FormControl(null, null),
       buque: new FormControl(null, null),
@@ -73,7 +74,7 @@ export class ModificarComponent implements OnInit, OnChanges {
       puerto: new FormControl(null, null),
       fleteTerrestre: new FormControl(null, [Validators.required, Validators.pattern(numRegex)]),
       comentarios: new FormControl(null, null),
-      fechaReal: new FormControl(null, Validators.required)
+      fechaReal: new FormControl('0',null)
     });
 
   }
@@ -86,36 +87,58 @@ export class ModificarComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     this.ids = [];
+    if(this.editForm) {
+      this.editForm.reset();
+    }
     this.seleccionados.forEach(x => this.ids.push(x.codigoDetalleProgramacion));
     if (changes.pedido && !changes.pedido.firstChange) {
       this.mostrarFormulario = true;
       this.errorEstados = false;
 
       this.pedido = changes.pedido.currentValue;
-      const puerto = this.puertos.find(x => x.codigo == this.pedido.codigoPuertoOrigen);
-      const naviera = this.navieras.find(x => x.codigo == this.pedido.codigoNaviera);
+      let puerto:any = this.puertos.find(x => x.codigo == this.pedido.codigoPuertoOrigen);
+      let naviera:any = this.navieras.find(x => x.codigo == this.pedido.codigoNaviera);
 
+      puerto = puerto == undefined ? null : puerto.codigo;
+      naviera = naviera == undefined ? null : naviera.codigo;
       //this.editForm.controls.fechaReal.setValue(1);
-      /* ASIGNACION DE INFORMACIÓN AL FORMULARIO */
-      this.editForm.controls.naviera.setValue(naviera.codigo);
-      this.editForm.controls.puerto.setValue(puerto.codigo);
+
+
 
       const ff = this.pedido.fechaFacturacion != '' ? this.toDate(this.pedido.fechaFacturacion): null;
       const fre = this.pedido.fechaRealEmbarque != '' ? this.toDate(this.pedido.fechaRealEmbarque): null;
-      //const fte = this.pedido.fechaTentativaEmbarque != '' ? this.toDate(this.pedido.fechaTentativaEmbarque): null;
+      const fte = this.pedido.fechaTentativaEmbarque != '' ? this.toDate(this.pedido.fechaTentativaEmbarque): null;
+
       if(this.pedido.fechaRealEmbarque != ""){
-        this.real = true;
-        this.editForm.controls.fechaReal.setValue('1');
+        this.real = '1';
+        //this.editForm.controls.fechaReal.setValue('1');
       }else{
-        this.real = false;
-        this.editForm.controls.fechaReal.setValue('0');
+        this.real = '0';
+        //this.editForm.controls.fechaReal.setValue('0');
       }
+
+      /* ASIGNACION DE INFORMACIÓN AL FORMULARIO */
+      this.editForm.controls.contenedor.setValue(this.pedido.numeroContenedor);
+      this.editForm.controls.sello.setValue(this.pedido.numeroSello);
+      this.editForm.controls.bl.setValue(this.pedido.numeroBL);
+      if(this.pedido.estadoDetalle == 'ON HOLD'){
+        this.editForm.controls.estado.setValue(true);
+      }
+      this.editForm.controls.prefactura.setValue(this.pedido.numeroFacturaBaan);
+      this.editForm.controls.sri.setValue(this.pedido.numeroFacturaSRI);
+      this.editForm.controls.fechaFacturacion.setValue(ff);
       if(fre) {
         this.editForm.controls.fechaEmbarque.setValue(fre);
+      }else{
+        this.editForm.controls.fechaEmbarque.setValue(fte);
       }
-      this.editForm.controls.fechaFacturacion.setValue(ff);
+      this.editForm.controls.naviera.setValue(naviera);
+      this.editForm.controls.buque.setValue(this.pedido.nombreBuqueNaviera);
       this.editForm.controls.fleteMaritimo.setValue(this.pedido.fleteMaritimo);
+      this.editForm.controls.puerto.setValue(puerto);
       this.editForm.controls.fleteTerrestre.setValue(this.pedido.valorFlete);
+      this.editForm.controls.comentarios.setValue(this.pedido.comentariosInaexpo);
+      this.editForm.controls.fechaReal.setValue(this.real);
     }
   }
 
@@ -234,6 +257,8 @@ export class ModificarComponent implements OnInit, OnChanges {
                 showCancelButton: false,
                 showConfirmButton: true,
                 showDenyButton: false,
+              }).then(()=>{
+                this.aplicarFiltros.emit();
               });
               break;
             case -1:
@@ -268,6 +293,8 @@ export class ModificarComponent implements OnInit, OnChanges {
               text: msgText,
               confirmButtonText: 'Entiendo!',
               confirmButtonColor: '#224668'
+            }).then(()=>{
+              this.actualizarInfo.emit(false);
             });
           }
           this.actualizarInfo.emit(false);
@@ -279,7 +306,7 @@ export class ModificarComponent implements OnInit, OnChanges {
     }
   }
 
-  private actualiarMultiple(indices: any){
+  private actualiarMultiple(indices: any):void{
     this.multiple = {
       codigoDetalleProgramacion: indices,
       actualizaNumeroFactura: false,
@@ -363,10 +390,10 @@ export class ModificarComponent implements OnInit, OnChanges {
         console.log(err);
       });
   }
-  public factura(){
-    console.log('Consumiendo servicio factura');
+
+  public factura():void{
     // this._programacionService.mostrarFactura(this.pedido.numeroFacturaBaan,this.pedido.fechaTentativaEmbarque, this.pedido.numeroFacturaBaan,this.pedido.descripcionFormaPago);
-    this._programacionService.mostrarFactura(this.pedido.numeroFacturaBaan,this.pedido.fechaTentativaEmbarque,'FEU100','200')
+    this._programacionService.mostrarFactura(this.pedido.numeroFacturaBaan,this.pedido.fechaTentativaEmbarque,'','0')
       .subscribe((rsp: any) => {
         let fileName = 'Factura-'+this.pedido.numeroFacturaBaan+'.xlsx';
         let blob: Blob = rsp.body as Blob;
@@ -377,8 +404,8 @@ export class ModificarComponent implements OnInit, OnChanges {
       });
   }
 
-  validateForm() {
-    return true;
+  private limpiarFormulario():void{
+    //this.editForm
   }
 
 

@@ -32,6 +32,7 @@ import {AllModules} from '@ag-grid-enterprise/all-modules';
 import {environment} from "../../../../environments/environment";
 import {EspecificacionComponent} from "../especificacion/especificacion.component";
 import {MatDialog} from "@angular/material/dialog";
+import {KeycloakService} from "keycloak-angular";
 
 @Component({
   selector: 'app-tabla',
@@ -87,15 +88,14 @@ export class TablaComponent implements OnInit, AfterViewInit {
   public fechasValidas: boolean = true;
   public fechasMaximas: boolean = true;
   public errorFechas: string;
+  private inicioDesde: any;
+  private finDesde: any;
 
 
   public tempPedidosFiltrados: Programacion[] = [];
   public pedidosFiltrados: Programacion[] = [];
   public pedidosSeleccionados: Programacion[] = [];
   public pedido: Programacion;
-
-  public hoy = moment();
-  public finMes = moment().endOf('month');
 
   private util = new UtilFunctions();
 
@@ -105,7 +105,8 @@ export class TablaComponent implements OnInit, AfterViewInit {
   constructor(private fb: FormBuilder,
               private _progService: ProgramacionService,
               private _catalogoSevice: CatalogosService,
-              private _dialog: MatDialog) {
+              private _dialog: MatDialog,
+              private _keycloak: KeycloakService) {
   }
 
 
@@ -128,10 +129,15 @@ export class TablaComponent implements OnInit, AfterViewInit {
     moment.locale('es');
     this.spinner = true;
 
+    this.inicioDesde = moment().subtract(1, 'months').startOf('month');
+    this.finDesde = moment().subtract(1, 'months').endOf('month');
+
     /** >>>> MODIFICAR USUARIO */
-    this.usuario = 'tmoscoso';
-    this.pais = 'ECU';
+
+    this.usuario = this._keycloak.getUsername();
+    this.pais = '';// 'ECU';
     this.rol = environment.rolCoordinador;
+
 
     /* DEFINICION DE COLUMNAS */
     this.columnDefs = [
@@ -188,8 +194,8 @@ export class TablaComponent implements OnInit, AfterViewInit {
     this.filterForm = this.fb.group({
       fechaTentativa: new FormControl(true),
       estado: new FormControl(null),
-      embarqueDesde: new FormControl(this.hoy.toDate()),        //b
-      embarqueHasta: new FormControl(this.finMes.toDate()),     //c
+      embarqueDesde: new FormControl(this.inicioDesde.toDate()),        //b
+      embarqueHasta: new FormControl(this.finDesde.toDate()),     //c
       paisPlanta: new FormControl(null,Validators.required),                            //o
       representante: new FormControl('TODOS'),         //m
       cliente: new FormControl('TODOS'),               //d
@@ -215,9 +221,11 @@ export class TablaComponent implements OnInit, AfterViewInit {
       const catalogos = [];
       catalogos.push(this._catalogoSevice.getPuertoPorUsuarioPais(this.estadosCatalogo.ACTIVO, this.usuario, valor));
       catalogos.push(this._catalogoSevice.getRepresentantePorPais(valor));
+      catalogos.push(this._catalogoSevice.getNavieraPorPais(this.estadosCatalogo.ACTIVO, this.usuario, valor));
       forkJoin(catalogos).subscribe((result: any[]) => {
         this.puertos = result[0].return;
         this.representantes = result[1].return;
+        this.navieras = result[2].return;
         this.filterForm.controls.representante.enable();
         this.filterForm.controls.cliente.enable();
         this.filterForm.controls.producto.enable();
@@ -227,9 +235,6 @@ export class TablaComponent implements OnInit, AfterViewInit {
       });
 
     });
-
-
-
 
     /** CONSULTAR CATALOGOS */
     const catalogos = [];
@@ -260,8 +265,8 @@ export class TablaComponent implements OnInit, AfterViewInit {
     /** CONSULTAR PROGRAMACION */
     let opciones: GetProgramacion = {};
     opciones.porFecha = 'SI';
-    opciones.fechaDesde = '24/08/2016';
-    opciones.fechaHasta = '26/08/2016';
+    opciones.fechaDesde = this.inicioDesde.format('DD/MM/YYYY');// '24/08/2016';
+    opciones.fechaHasta = this.finDesde.format('DD/MM/YYYY');// '26/08/2016';
     opciones.estado = 'EMBARCADO';
     opciones.codigoPais = 'ECU';
     opciones.idContenedor = '';
@@ -285,7 +290,7 @@ export class TablaComponent implements OnInit, AfterViewInit {
     this.gridApi.sizeColumnsToFit();
   }
 
-  public filtroEstado(valor: any, tipo: string, checked: boolean = true) {
+  public filtroEstado(valor: any, tipo: string, checked: boolean = true):void {
     // this.pedidosFiltrados = this.tempPedidosFiltrados;
     // let tempPedidosFiltrados = Object.assign([], this.pedidosFiltrados);
     // this.pedidosFiltrados = [];
@@ -335,7 +340,7 @@ export class TablaComponent implements OnInit, AfterViewInit {
     // });
   }
 
-  public limpiarFiltros() {
+  public limpiarFiltros():void {
     this.status.forEach(x => x.checked = false);
     // this.filterForm.controls['embarqueDesde'].setValue(new Date());
     // this.filterForm.controls['embarqueHasta'].setValue(new Date());
@@ -355,7 +360,7 @@ export class TablaComponent implements OnInit, AfterViewInit {
     this.status.forEach(x => x.checked = false);
   }
 
-  private estadosTodos() {
+  private estadosTodos():void {
     this.estadosFiltrados = [];
     this.status.forEach(x => x.checked = true);
     // Colocar todos los estados
@@ -370,6 +375,7 @@ export class TablaComponent implements OnInit, AfterViewInit {
   }
 
   public aplicarFiltros() {
+    debugger
     //Iniciar con todos los pedidos
     // this.pedidosFiltrados = this.pedidosTodos;
     // Aplicar filtros

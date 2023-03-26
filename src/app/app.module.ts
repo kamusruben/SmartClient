@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
@@ -7,6 +7,8 @@ import { MaterialModule } from "../shared/material.module";
 import {PedidoModule} from "./pedido/pedido.module";
 import {SharedModule} from "../shared/shared.module";
 import {AuthInterceptor} from "./interceptors/auth.intercepto";
+import {initializeKeycloak} from "./util/configs/keycloack-init.factory";
+import {KeycloakAngularModule, KeycloakService} from "keycloak-angular";
 
 @NgModule({
   declarations: [
@@ -18,12 +20,18 @@ import {AuthInterceptor} from "./interceptors/auth.intercepto";
     HttpClientModule,
     MaterialModule,
     SharedModule,
-    PedidoModule
+    PedidoModule,
+    KeycloakAngularModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
     useClass: AuthInterceptor,
     multi: true
+  },{
+    provide: APP_INITIALIZER,
+    useFactory: initializeKeycloak,
+    multi: true,
+    deps: [KeycloakService]
   }],
   bootstrap: [AppComponent]
 })

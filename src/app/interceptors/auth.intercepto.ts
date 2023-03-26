@@ -21,7 +21,6 @@ export class AuthInterceptor implements HttpInterceptor {
         if(errorCode >= 500 && errorCode <= 599){
           mensaje = 'Error de Servidor';
         }
-        debugger
         switch(err.status){
           case 400:
             mensaje = 'Solicitud fallida';

@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TablaComponent } from "./pedido/components/tabla/tabla.component";
+import {AuthGuard} from "./guard/auth.guard";
 
 const routes: Routes = [
   {
     path: 'home',
-    component: TablaComponent
+    component: TablaComponent,
+    canActivate: [AuthGuard]
   }];
 
 @NgModule({

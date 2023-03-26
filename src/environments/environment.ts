@@ -6,7 +6,13 @@ export const environment = {
   production: false,
   smartClientApi: 'https://cdscdes.pronaca.com/smartclientapi/',
   //smartClientApi:'http://localhost:8181/smartclientapi/',
-  rolCoordinador: 'COORDINADOR'
+  rolCoordinador: 'COORDINADOR',
+  keycloak: {
+    issuer: 'http://localhost:8080/auth',
+    realm: 'SmartClient',
+    clientId: 'SmartFront',
+    loadUserProfileAtStartUp: false
+  },
 
 };
 

@@ -10,25 +10,27 @@ import {Inject, Injectable, PLATFORM_ID} from "@angular/core";
 import {Observable, of, throwError} from "rxjs";
 import Swal from 'sweetalert2';
 import {FunctionsGeneric} from "./util/generic/functions.generic";
+import {KeycloakService} from "keycloak-angular";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   constructor(
     @Inject(PLATFORM_ID) private _platformId: string,
-    //protected keycloakAngular: KeycloakService
+    protected keycloakAngular: KeycloakService
   ) {
-    // this.getToken();
+    this.getToken();
   }
 
-  // async getToken() {
-  //   const userDetails = await this.keycloakAngular.getToken();
-  //   FunctionsGeneric.setToken(userDetails);
-  // }
+  async getToken() {
+    const userDetails = await this.keycloakAngular.getToken();
+    console.log('token ', userDetails)
+    FunctionsGeneric.setToken(userDetails);
+  }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // this.getToken();
+    this.getToken();
     let token = "Bearer " + localStorage.getItem('token');
-    console.log('Token intercept: ' + token)
+    console.log('token ', token)
     const authReq = req.clone({
       setHeaders: {
         authorization: token,

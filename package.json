@@ -28,6 +28,7 @@
     "alertifyjs": "^1.13.1",
     "angular-font-awesome": "^3.1.2",
     "bootstrap": "^5.2.2",
+    "keycloak-angular": "^9.0.0",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.37",
     "rxjs": "~6.6.0",
