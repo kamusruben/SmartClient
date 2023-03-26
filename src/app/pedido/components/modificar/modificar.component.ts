@@ -60,20 +60,20 @@ export class ModificarComponent implements OnInit, OnChanges {
     let numRegex = /^-?\d*[.,]?\d{0,2}$/;
 
     this.editForm = this.fb.group({
-      contenedor: new FormControl(null, null),
-      sello: new FormControl(null, null),
-      bl: new FormControl(null, null),
-      estado: new FormControl(null,null),
-      prefactura: new FormControl(null, null),
-      sri: new FormControl(null, null),
+      contenedor: new FormControl('', null),
+      sello: new FormControl('', null),
+      bl: new FormControl('', null),
+      estado: new FormControl('',null),
+      prefactura: new FormControl('', null),
+      sri: new FormControl('', null),
       fechaFacturacion: new FormControl(null),
       fechaEmbarque: new FormControl(null),
-      naviera: new FormControl(null, null),
-      buque: new FormControl(null, null),
-      fleteMaritimo: new FormControl(null, [Validators.required, Validators.pattern(numRegex)]),
-      puerto: new FormControl(null, null),
-      fleteTerrestre: new FormControl(null, [Validators.required, Validators.pattern(numRegex)]),
-      comentarios: new FormControl(null, null),
+      naviera: new FormControl('', null),
+      buque: new FormControl('', null),
+      fleteMaritimo: new FormControl(0, [Validators.required, Validators.pattern(numRegex)]),
+      puerto: new FormControl('', null),
+      fleteTerrestre: new FormControl(0, [Validators.required, Validators.pattern(numRegex)]),
+      comentarios: new FormControl('', null),
       fechaReal: new FormControl('0',null)
     });
 

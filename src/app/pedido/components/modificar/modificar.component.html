@@ -8,10 +8,6 @@
     <div class="small fw-bold ms-2 mb-2">Cliente:</div>
     <div class="small ms-2">{{pedido.nombreCliente}}</div>
   </div>
-  <div class="d-flex flex-row justify-content-start">
-    <div class="small fw-bold ms-2">ID FCL:</div>
-    <div class="small ms-2">{{pedido.nombreCliente}}</div>
-  </div>
   <div class="my-0">
     <mat-form-field class="w-100" appearance="fill">
       <mat-label>ID Contenedor</mat-label>
@@ -21,19 +17,19 @@
   <div class="my-0">
     <mat-form-field class="w-100" appearance="fill">
       <mat-label>Sello</mat-label>
-      <input matInput formControlName="sello" type="text" value="{{pedido.numeroFacturaSRI}}">
+      <input matInput formControlName="sello" type="text" value="{{pedido.numeroSello}}">
     </mat-form-field>
   </div>
   <div class="my-0">
     <mat-form-field class="w-100" appearance="fill">
       <mat-label># BL</mat-label>
-      <input matInput formControlName="bl" type="text" value="{{pedido.numeroFacturaSRI}}">
+      <input matInput formControlName="bl" type="text" value="{{pedido.numeroBL}}">
     </mat-form-field>
   </div>
   <div class="my-0">
     <mat-form-field class="w-100" appearance="fill">
       <mat-label>Prefactura Aduana</mat-label>
-      <input matInput formControlName="prefactura" type="text" value="{{pedido.numeroFacturaSRI}}">
+      <input matInput formControlName="prefactura" type="text" value="{{pedido.numeroFacturaBaan}}">
     </mat-form-field>
   </div>
   <div class="my-0">

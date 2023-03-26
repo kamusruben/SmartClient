@@ -237,9 +237,8 @@
                                   *ngFor="let estado of estados | keyvalue">{{estado.value}}</mat-slide-toggle>
               </div>
               <mat-error class="error-form" *ngIf="errorEstados">Debe seleccionar al menos un estado</mat-error>
+              <mat-error class="error-form mb-2" *ngIf="errorForm || !fechasValidas">Complete todos los campos requeridos</mat-error>
               <div class="my-3 d-flex flex-row justify-content-start">
-                <!--                <div class="ps-2 mat-error small" *ngIf="errorDates">{{errorMsg}}</div>-->
-                <mat-error class="error-form mb-2" *ngIf="errorForm">Complete todos los campos requeridos</mat-error>
                 <button class="me-2" mat-raised-button color="primary" (click)="aplicarFiltros()">Buscar</button>
                 <button class="me-2" mat-raised-button color="success" (click)="limpiarFiltros()">Limpiar</button>
                 <button class="w-50" mat-raised-button color="primary" (click)="especificaciones()" [disabled]="pedidosSeleccionados.length != 1">Ver Especificaciones</button>

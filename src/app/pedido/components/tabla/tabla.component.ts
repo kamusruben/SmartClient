@@ -129,9 +129,11 @@ export class TablaComponent implements OnInit, AfterViewInit {
     moment.locale('es');
     this.spinner = true;
 
-    this.inicioDesde = moment().subtract(1, 'months').startOf('month');
-    this.finDesde = moment().subtract(1, 'months').endOf('month');
+    // this.inicioDesde = moment().subtract(1, 'months').startOf('month');
+    // this.finDesde = moment().subtract(1, 'months').endOf('month');
 
+    this.inicioDesde = moment().set('month',7).set('date',25).set('year',2016);
+    this.finDesde = moment().set('month',7).set('date',25).set('year',2016);
     /** >>>> MODIFICAR USUARIO */
 
     this.usuario = this._keycloak.getUsername();
@@ -194,8 +196,8 @@ export class TablaComponent implements OnInit, AfterViewInit {
     this.filterForm = this.fb.group({
       fechaTentativa: new FormControl(true),
       estado: new FormControl(null),
-      embarqueDesde: new FormControl(this.inicioDesde.toDate()),        //b
-      embarqueHasta: new FormControl(this.finDesde.toDate()),     //c
+      embarqueDesde: new FormControl(this.inicioDesde),        //b
+      embarqueHasta: new FormControl(this.finDesde),     //c
       paisPlanta: new FormControl(null,Validators.required),                            //o
       representante: new FormControl('TODOS'),         //m
       cliente: new FormControl('TODOS'),               //d
@@ -344,16 +346,16 @@ export class TablaComponent implements OnInit, AfterViewInit {
     this.status.forEach(x => x.checked = false);
     // this.filterForm.controls['embarqueDesde'].setValue(new Date());
     // this.filterForm.controls['embarqueHasta'].setValue(new Date());
-    this.filterForm.controls['estado'].setValue(this.estados.TODOS);
-    this.filterForm.controls['paisPlanta'].setValue(this.estados.TODOS);
-    this.filterForm.controls['representante'].setValue(this.estados.TODOS);
-    this.filterForm.controls['cliente'].setValue(this.estados.TODOS);
-    this.filterForm.controls['naviera'].setValue(this.estados.TODOS);
-    this.filterForm.controls['producto'].setValue('');
-    this.filterForm.controls['naviera'].setValue(this.estados.TODOS);
-    this.filterForm.controls['marca'].setValue(this.estados.TODOS);
-    this.filterForm.controls['numeroContenedor'].setValue('');
-    this.filterForm.controls['prefactura'].setValue('');
+    this.filterForm.controls.estado.setValue(this.estados.TODOS);
+    this.filterForm.controls.paisPlanta.setValue(this.estados.TODOS);
+    this.filterForm.controls.representante.setValue(this.estados.TODOS);
+    this.filterForm.controls.cliente.setValue(this.estados.TODOS);
+    this.filterForm.controls.naviera.setValue(this.estados.TODOS);
+    this.filterForm.controls.producto.setValue('');
+    this.filterForm.controls.naviera.setValue(this.estados.TODOS);
+    this.filterForm.controls.marca.setValue(this.estados.TODOS);
+    this.filterForm.controls.numeroContenedor.setValue('');
+    this.filterForm.controls.prefactura.setValue('');
     this.estadosTodos();
     // this.aplicarFiltros();
     this.estadosFiltrados = [];
@@ -375,14 +377,13 @@ export class TablaComponent implements OnInit, AfterViewInit {
   }
 
   public aplicarFiltros() {
-    debugger
     //Iniciar con todos los pedidos
     // this.pedidosFiltrados = this.pedidosTodos;
     // Aplicar filtros
-    let desde = this.filterForm.controls['embarqueDesde'].value;
-    let hasta = this.filterForm.controls['embarqueHasta'].value;
+    let desde = this.filterForm.controls.embarqueDesde.value;
+    let hasta = this.filterForm.controls.embarqueHasta.value;
 
-    if(hasta.getFullYear() - desde.getFullYear() > 2){
+    if(hasta.diff(desde,'years') > 2){
       this.fechasMaximas = false;
       this.errorFechas = 'Consulta máxima permitida (2 años)';
       return;
@@ -390,7 +391,8 @@ export class TablaComponent implements OnInit, AfterViewInit {
     /**
      * Validaciones
      */
-    if (desde > hasta) {
+    //Fecha hasta no puede ser mayor a fecha desde
+    if (desde.diff(hasta,'days')>0) {
       this.fechasValidas = false;
       this.errorFechas = 'Las fechas no son correctas';
       return;
@@ -399,28 +401,28 @@ export class TablaComponent implements OnInit, AfterViewInit {
     this.fechasMaximas = true;
 
     //filtro Pais Planta
-    let ppCodigo = this.filterForm.controls['paisPlanta'].value;
+    let ppCodigo = this.filterForm.controls.paisPlanta.value;
     //filtro Producto
-    let prCodigo = this.filterForm.controls['producto'].value;
+    let prCodigo = this.filterForm.controls.producto.value;
     let prod = 'TODOS';
     if (prCodigo != null && prCodigo != '') {
       let prodCatalogo = this.productos.find(x => x.descripcionEspanol == prCodigo);
       prod = prodCatalogo.codigo;
     }
 
-    let idc = this.util.nullOrEmpty(this.filterForm.controls['numeroContenedor'].value) ? '*' : this.filterForm.controls['numeroContenedor'].value;
-    let rep = this.util.nullOrEmpty(this.filterForm.controls['representante'].value) ? '*' : this.filterForm.controls['representante'].value;
-    let cli = this.util.nullOrEmpty(this.filterForm.controls['cliente'].value) ? 'TODOS' : this.filterForm.controls['cliente'].value;
-    let nav = this.util.nullOrEmpty(this.filterForm.controls['naviera'].value) ? '*' : this.filterForm.controls['naviera'].value;
-    let marca = this.util.nullOrEmpty(this.filterForm.controls['marca'].value) ? 'TODOS' : this.filterForm.controls['marca'].value;
+    let idc = this.util.nullOrEmpty(this.filterForm.controls.numeroContenedor.value) ? '*' : this.filterForm.controls.numeroContenedor.value;
+    let rep = this.util.nullOrEmpty(this.filterForm.controls.representante.value) ? '*' : this.filterForm.controls.representante.value;
+    let cli = this.util.nullOrEmpty(this.filterForm.controls.cliente.value) ? 'TODOS' : this.filterForm.controls.cliente.value;
+    let nav = this.util.nullOrEmpty(this.filterForm.controls.naviera.value) ? '*' : this.filterForm.controls.naviera.value;
+    let marca = this.util.nullOrEmpty(this.filterForm.controls.marca.value) ? 'TODOS' : this.filterForm.controls.marca.value;
 
     if (this.filterForm.valid) {
 
       /** CONSULTAR PROGRAMACION */
       let opciones: GetProgramacion = {};
-      opciones.porFecha = this.filterForm.controls['fechaTentativa'].value ? 'SI' : 'NO';
-      opciones.fechaDesde = moment(desde).format('L');
-      opciones.fechaHasta = moment(hasta).format('L');
+      opciones.porFecha = this.filterForm.controls.fechaTentativa.value ? 'SI' : 'NO';
+      opciones.fechaDesde = desde.format('L');
+      opciones.fechaHasta = hasta.format('L');
       opciones.estado = 'EMBARCADO';
       opciones.codigoPais = this.filterForm.controls['paisPlanta'].value;
       opciones.idContenedor = idc;
