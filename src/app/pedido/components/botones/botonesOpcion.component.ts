@@ -30,6 +30,8 @@ export class BotonesOpcionComponent implements ICellRendererAngularComp {
     console.log('event');
     console.log(event);
     console.log(this.params);
+    console.log('Se envia: ');
+    console.log(this.params.data.codigoProgramacion);
     this._programacionService.validarBorrado(this.params.data.codigoProgramacion).subscribe((rsp)=>{
       if(rsp){
         Swal.fire({
@@ -47,7 +49,7 @@ export class BotonesOpcionComponent implements ICellRendererAngularComp {
             // Swal.fire('Saved!', '', 'success')
             //this.params.clicked(this.params, 'remove')
             // this._programacionService.borrarDetalle(this.params.data.codigoProgramacion)
-            this._programacionService.borrarDetalle(this.params.data.codigoDetalleProgramacion)
+            this._programacionService.borrarDetalle(this.params.data.codigoProgramacion)
               .subscribe(() => {
                 Swal.fire({
                   icon: 'success',

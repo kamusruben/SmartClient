@@ -91,19 +91,26 @@ export class ModificarComponent implements OnInit, OnChanges {
       this.editForm.reset();
     }
     this.seleccionados.forEach(x => this.ids.push(x.codigoDetalleProgramacion));
-    if (changes.pedido && !changes.pedido.firstChange) {
+    if ((changes.pedido && !changes.pedido.firstChange) || (changes.seleccionados && !changes.seleccionados.firstChange)) {
+
       this.mostrarFormulario = true;
       this.errorEstados = false;
 
-      this.pedido = changes.pedido.currentValue;
+      if(changes.seleccionados.currentValue.length > 1){
+        this.pedido = changes.seleccionados.currentValue[0];
+      }else{
+        if(changes.seleccionados.currentValue.length == 1){
+          this.pedido = changes.seleccionados.currentValue[0];
+        }else{
+          this.pedido = changes.pedido.currentValue;
+        }
+      }
       let puerto:any = this.puertos.find(x => x.codigo == this.pedido.codigoPuertoOrigen);
       let naviera:any = this.navieras.find(x => x.codigo == this.pedido.codigoNaviera);
 
       puerto = puerto == undefined ? null : puerto.codigo;
       naviera = naviera == undefined ? null : naviera.codigo;
       //this.editForm.controls.fechaReal.setValue(1);
-
-
 
       const ff = this.pedido.fechaFacturacion != '' ? this.toDate(this.pedido.fechaFacturacion): null;
       const fre = this.pedido.fechaRealEmbarque != '' ? this.toDate(this.pedido.fechaRealEmbarque): null;
@@ -212,7 +219,7 @@ export class ModificarComponent implements OnInit, OnChanges {
       }else {
         this.simple = {
           codigoDetalleProgramacion: parseInt(this.pedido.codigoDetalleProgramacion),
-          numeroFacturaBaan: this.pedido.numeroFacturaBaan,
+          numeroFacturaBaan: this.editForm.controls.prefactura.value,
           fechaEmbarque: moment(this.editForm.controls.fechaEmbarque.value).format('DD/MM/YYYY'),
           esFechaRealEmbarque: this.editForm.controls.fechaReal.value == 1 ? true : false,
           estado: this.editForm.controls.estado.value ? 'ON HOLD' : this.pedido.estadoDetalle,
@@ -224,7 +231,7 @@ export class ModificarComponent implements OnInit, OnChanges {
           valorFlete: this.editForm.controls.fleteTerrestre.value,
           fechaFacturacion: moment(this.editForm.controls.fechaFacturacion.value).format('DD/MM/YYYY'),
           fleteMaritimo: this.editForm.controls.fleteMaritimo.value,
-          codigoNaviera: this.pedido.codigoNaviera,
+          codigoNaviera: this.editForm.controls.naviera.value,
           codigoPuertoDestino: this.pedido.codigoPuertoDestino,
           dae: this.pedido.dae,
           camposModificados: ''
@@ -258,6 +265,7 @@ export class ModificarComponent implements OnInit, OnChanges {
                 showConfirmButton: true,
                 showDenyButton: false,
               }).then(()=>{
+                
                 this.aplicarFiltros.emit();
               });
               break;
@@ -395,7 +403,7 @@ export class ModificarComponent implements OnInit, OnChanges {
     // this._programacionService.mostrarFactura(this.pedido.numeroFacturaBaan,this.pedido.fechaTentativaEmbarque, this.pedido.numeroFacturaBaan,this.pedido.descripcionFormaPago);
     this._programacionService.mostrarFactura(this.pedido.numeroFacturaBaan,this.pedido.fechaTentativaEmbarque,'','0')
       .subscribe((rsp: any) => {
-        let fileName = 'Factura-'+this.pedido.numeroFacturaBaan+'.xlsx';
+        let fileName = 'Factura-Aduana'+this.pedido.numeroFacturaBaan+'.xlsx';
         let blob: Blob = rsp.body as Blob;
         let a = document.createElement('a');
         a.download = fileName;

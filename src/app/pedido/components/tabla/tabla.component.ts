@@ -475,10 +475,13 @@ export class TablaComponent implements OnInit, AfterViewInit {
   }
 
   exportAsExcel(filename?: string): void {
+    const exportable = this.columnDefs.map(x => {return x.field});
+    exportable.splice(0,1);
     const params = {
       columnGroups: true,
       allColumns: true,
-      fileName: 'Filename',
+      fileName: 'Inaexpo',
+      columnKeys: exportable,
     };
     this.gridApi.exportDataAsCsv(params);
     // this.gridApi.exportDataAsExcel();
