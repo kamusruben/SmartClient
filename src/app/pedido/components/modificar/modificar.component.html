@@ -1,5 +1,5 @@
 <div class="fw-bold my-3 ps-3">Modificación de Programación</div>
-<form [hidden]="!mostrarFormulario" class="ps-2 mt-2" *ngIf="pedido != null" [formGroup]="editForm">
+<form [hidden]="!mostrarFormulario" class="ps-2 mt-2" *ngIf="pedido != null; else seleccionar" [formGroup]="editForm">
 <!--  <div class="d-flex flex-row justify-content-start mt-4">-->
 <!--    <div class="small fw-bold ms-2 mb-2">Id Detalle:</div>-->
 <!--    <div class="small ms-2">{{ids | json }}</div>-->
@@ -15,7 +15,7 @@
   <div class="my-0">
     <mat-form-field class="w-100" appearance="fill">
       <mat-label># Contenedor</mat-label>
-      <input matInput formControlName="contenedor" type="text" value="{{pedido.numeroContenedor}}">
+      <input matInput formControlName="contenedor" class="readonly" type="text" value="{{pedido.identificadorContenedor}}" [readonly]="true">
     </mat-form-field>
   </div>
   <div class="my-0">
@@ -136,7 +136,9 @@
   <mat-error class="error-form mb-2" *ngIf="errorEstados">{{mensajeError}}</mat-error>
   <div class="d-flex flex-row justify-content-center mb-2">
     <button mat-button color="primary" (click)="actualizar()">Actualizar</button>
-    <button mat-button color="success" class="ms-2" (click)="factura()">Factura Aduana</button>
+    <button mat-button color="success" class="ms-2" (click)="factura()" type="button" [disabled]="seleccionados.length != 1">Factura Aduana</button>
   </div>
 </form>
-<div class="alert alert-warning mx-2 my-2" [hidden]="mostrarFormulario">Debe seleccionar un elemento</div>
+<ng-template #seleccionar>
+  <div class="alert alert-warning mx-2 my-2">Debe seleccionar un elemento</div>
+</ng-template>

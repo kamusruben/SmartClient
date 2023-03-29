@@ -1,3 +1,7 @@
+<div class="user-info text-center">
+  <div class="fw-bold">¡Hola {{nombreUsuario}}!</div>
+  <div class="text-muted small">Bienvenid@ nuevamente</div>
+</div>
 <div class="mt-4">
   <h2 class="text-muted border-bottom">Listado</h2>
   <div class="w-100">
@@ -24,7 +28,7 @@
         (selectionChanged)="onSelectionChanged($event)"
         (gridReady)="onGridReady($event)">
       </ag-grid-angular>
-      <mat-spinner *ngIf="spinner" class="spinner"></mat-spinner>
+      <mat-spinner id="spinner" class="spinner" [ngClass]="{'d-none':!spinner}"></mat-spinner>
       <div class="d-flex flew-row justify-content-start mt-2">
         <div class="me-3"><strong>Número de resultados:</strong> {{pedidosFiltrados.length}}</div>
         <div><strong>Seleccionados:</strong> {{pedidosSeleccionados.length}}</div>
@@ -74,7 +78,7 @@
                   <!--                  Filtrado uno a uno-->
                   <!--                  <mat-select formControlName="estado" (selectionChange)="filtro($event,'paisPlanta')">-->
                   <mat-select formControlName="paisPlanta">
-                    <mat-option value="TODOS"><strong>TODOS</strong></mat-option>
+<!--                    <mat-option value="TODOS"><strong>TODOS</strong></mat-option>-->
                     <mat-option *ngFor="let pais of paises"
                                 value="{{pais.codigo}}">{{pais.descripcion}}</mat-option>
                   </mat-select>
@@ -112,38 +116,55 @@
                   <!--                  <mat-error *ngIf="selected.hasError('required')">Debe seleccionar un valor</mat-error>-->
                 </mat-form-field>
               </div>
-              <!-- FILTRO ESTADO -->
-              <!--              <div class="w-100">-->
-              <!--                <mat-form-field class="w-100 py-0 my-0" appearance="fill">-->
-              <!--                  <mat-label>Estado</mat-label>-->
-              <!--                  <mat-select formControlName="estado" (selectionChange)="filtro($event,'estado')">-->
-              <!--                    <mat-option *ngFor="let estado of estados | keyvalue"-->
-              <!--                                value="{{estado.value}}">{{estado.value}}</mat-option>-->
-              <!--                  </mat-select>-->
-              <!--                  &lt;!&ndash;                  <mat-hint>Errors appear instantly!</mat-hint>&ndash;&gt;-->
-              <!--                  <mat-error *ngIf="selected.hasError('required')">Debe seleccionar un valor</mat-error>-->
-              <!--                </mat-form-field>-->
-              <!--              </div>-->
-
-              <!-- FILTRO PRODUCTO -->
-              <div class="my-0">
+              <!-- FILTRO CODIGO PRODUCTO-->
+<!--              <div class="w-100 mt-2">-->
+<!--                <mat-form-field class="w-100 py-0 my-0" appearance="fill">-->
+<!--                  <mat-label>Código de Producto</mat-label>-->
+<!--                  &lt;!&ndash;                  Filtrado uno a uno&ndash;&gt;-->
+<!--                  &lt;!&ndash;                  <mat-select formControlName="estado" (selectionChange)="filtro($event,'cliente')">&ndash;&gt;-->
+<!--                  <mat-select formControlName="codigoProducto">-->
+<!--                    <mat-option value="TODOS"><strong>TODOS</strong></mat-option>-->
+<!--                    <mat-option *ngFor="let producto of productos"-->
+<!--                                value="{{producto.codigo}}">{{producto.codigo}}</mat-option>-->
+<!--                  </mat-select>-->
+<!--                  &lt;!&ndash;                  <mat-hint>Errors appear instantly!</mat-hint>&ndash;&gt;-->
+<!--                  &lt;!&ndash;                  <mat-error *ngIf="selected.hasError('required')">Debe seleccionar un valor</mat-error>&ndash;&gt;-->
+<!--                </mat-form-field>-->
+<!--              </div>-->
+              <!-- FILTRO PRODUCTO-->
+              <div class="w-100 mt-2">
                 <mat-form-field class="w-100 py-0 my-0" appearance="fill">
                   <mat-label>Producto</mat-label>
-                  <input type="text"
-                         placeholder="Ingrese el producto"
-                         matInput
-                         formControlName="producto"
-                         [matAutocomplete]="acProducto">
                   <!--                  Filtrado uno a uno-->
-                  <!--                         (change)="filtro($event.target,'producto')">-->
-                  <!--                  <mat-autocomplete autoActiveFirstOption #acProducto="matAutocomplete" (optionSelected)="filtro($event.option, 'producto')">-->
-                  <mat-autocomplete autoActiveFirstOption #acProducto="matAutocomplete">
-                    <mat-option *ngFor="let option of productosFiltrados | async" [value]="option.descripcionEspanol">
-                      {{option.descripcionEspanol}}
-                    </mat-option>
-                  </mat-autocomplete>
+                  <!--                  <mat-select formControlName="estado" (selectionChange)="filtro($event,'cliente')">-->
+                  <mat-select formControlName="producto">
+                    <mat-option value="TODOS"><strong>TODOS</strong></mat-option>
+                    <mat-option *ngFor="let producto of productos"
+                                value="{{producto.codigo}}"><b>{{producto.codigo}}</b> - <small>{{producto.descripcionEspanol}}</small></mat-option>
+                  </mat-select>
+                  <!--                  <mat-hint>Errors appear instantly!</mat-hint>-->
+                  <!--                  <mat-error *ngIf="selected.hasError('required')">Debe seleccionar un valor</mat-error>-->
                 </mat-form-field>
               </div>
+              <!-- FILTRO PRODUCTO AUTOCOMPLETE-->
+<!--              <div class="my-0">-->
+<!--                <mat-form-field class="w-100 py-0 my-0" appearance="fill">-->
+<!--                  <mat-label>Producto</mat-label>-->
+<!--                  <input type="text"-->
+<!--                         placeholder="Ingrese el producto"-->
+<!--                         matInput-->
+<!--                         formControlName="producto"-->
+<!--                         [matAutocomplete]="acProducto">-->
+<!--                  &lt;!&ndash;                  Filtrado uno a uno&ndash;&gt;-->
+<!--                  &lt;!&ndash;                         (change)="filtro($event.target,'producto')">&ndash;&gt;-->
+<!--                  &lt;!&ndash;                  <mat-autocomplete autoActiveFirstOption #acProducto="matAutocomplete" (optionSelected)="filtro($event.option, 'producto')">&ndash;&gt;-->
+<!--                  <mat-autocomplete autoActiveFirstOption #acProducto="matAutocomplete">-->
+<!--                    <mat-option *ngFor="let option of productosFiltrados | async" [value]="option.descripcionEspanol">-->
+<!--                      {{option.descripcionEspanol}}-->
+<!--                    </mat-option>-->
+<!--                  </mat-autocomplete>-->
+<!--                </mat-form-field>-->
+<!--              </div>-->
               <!-- FILTRO NAVIERAS -->
               <div class="w-100">
                 <mat-form-field class="w-100 py-0 my-0" appearance="fill">
@@ -239,9 +260,9 @@
               <mat-error class="error-form" *ngIf="errorEstados">Debe seleccionar al menos un estado</mat-error>
               <mat-error class="error-form mb-2" *ngIf="errorForm || !fechasValidas">Complete todos los campos requeridos</mat-error>
               <div class="my-3 d-flex flex-row justify-content-start">
-                <button class="me-2" mat-raised-button color="primary" (click)="aplicarFiltros()">Buscar</button>
-                <button class="me-2" mat-raised-button color="success" (click)="limpiarFiltros()">Limpiar</button>
-                <button class="w-50" mat-raised-button color="primary" (click)="especificaciones()" [disabled]="pedidosSeleccionados.length != 1">Ver Especificaciones</button>
+                <button class="me-2" mat-raised-button color="primary" id="aplicarFiltros" (click)="aplicarFiltros()" [disabled]="!pais">Buscar</button>
+                <button class="me-2" mat-raised-button color="success" type="button" (click)="limpiarFiltros()">Limpiar</button>
+                <button class="w-50" mat-raised-button color="primary" type="button" (click)="especificaciones()" [disabled]="pedidosSeleccionados.length != 1">Ver Especificaciones</button>
               </div>
             </form>
           </div>

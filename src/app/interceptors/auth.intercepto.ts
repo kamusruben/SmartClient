@@ -67,6 +67,8 @@ export class AuthInterceptor implements HttpInterceptor {
           icon: "error",
           confirmButtonText: 'Entiendo',
           confirmButtonColor: '#224668'
+        }).then(()=>{
+          document.getElementById('spinner').classList.add('d-none');
         });
         return throwError(err);
       }),

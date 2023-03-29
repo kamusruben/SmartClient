@@ -2,7 +2,7 @@ import {
   AfterContentChecked,
   AfterContentInit, AfterViewChecked,
   AfterViewInit,
-  Component,
+  Component, Input,
   OnInit,
   QueryList,
   ViewChildren
@@ -61,7 +61,7 @@ export class TablaComponent implements OnInit, AfterViewInit {
 
   /** FILTROS */
   /* Filtro Producto */
-  public productosFiltrados: Observable<Catalogo[]>;
+  public productosFiltrados: Observable<Catalogo[]>|Catalogo[];
   /* Filtro Destino */
   public destinosFiltrados: Observable<Catalogo[]>;
   /* Filtro Contenedores */
@@ -79,11 +79,13 @@ export class TablaComponent implements OnInit, AfterViewInit {
 
   /** FORMULARIO */
   public filterForm: FormGroup;
+  private cambioProducto: boolean;
+  private cambioCodigoProducto: boolean;
 
   /** VARIABLES DE INFORMACIÓN */
   public spinner: boolean = false;
   private usuario: string;
-  private pais: string;
+  public pais: boolean = false;
   private rol: string;
   public fechasValidas: boolean = true;
   public fechasMaximas: boolean = true;
@@ -98,7 +100,7 @@ export class TablaComponent implements OnInit, AfterViewInit {
   public pedido: Programacion;
 
   private util = new UtilFunctions();
-
+  @Input() nombreUsuario: string;
 
   private mockup: Mockup = new Mockup();
 
@@ -127,17 +129,19 @@ export class TablaComponent implements OnInit, AfterViewInit {
     this.errorEstados = false;
     this.errorForm = false;
     moment.locale('es');
-    this.spinner = true;
+    //this.spinner = true;
 
-    // this.inicioDesde = moment().subtract(1, 'months').startOf('month');
-    // this.finDesde = moment().subtract(1, 'months').endOf('month');
+    this.inicioDesde = moment().subtract(1, 'months').startOf('month');
+    this.finDesde = moment().subtract(1, 'months').endOf('month');
 
-    this.inicioDesde = moment().set('month',7).set('date',25).set('year',2016);
-    this.finDesde = moment().set('month',7).set('date',25).set('year',2016);
+    // this.inicioDesde = moment().set('month',7).set('date',25).set('year',2018);
+    // this.finDesde = moment().set('month',7).set('date',25).set('year',2018);
     /** >>>> MODIFICAR USUARIO */
 
     this.usuario = this._keycloak.getUsername();
-    this.pais = '';// 'ECU';
+    console.log('instancia',this._keycloak.getKeycloakInstance());
+    this.nombreUsuario = this._keycloak.getKeycloakInstance().profile.firstName;
+    console.log(this.nombreUsuario);
     this.rol = environment.rolCoordinador;
 
 
@@ -158,7 +162,7 @@ export class TablaComponent implements OnInit, AfterViewInit {
       {field: 'nombreCliente', headerName: 'Cliente', resizable: true, minWidth: 250},
       {field: 'descripcionMarca', headerName: 'Marca', minWidth: 200, resizable: true},
       {field: 'numeroCajas', headerName: 'Cajas', minWidth: 120, resizable: true},
-      {field: 'descripcionProducto', headerName: 'Producto', resizable: true, minWidth: 250},
+      {field: 'codigoProducto', headerName: 'Producto', resizable: true, minWidth: 250},
       {field: 'descripcionUnidadesCaja', headerName: 'Unid/Caja', minWidth: 120, resizable: true},
       {field: 'nombrePuertoDestino', headerName: 'Destino', minWidth: 120, resizable: true},
       {field: 'fechaTermino', headerName: 'Término', minWidth: 120, resizable: true},
@@ -185,6 +189,7 @@ export class TablaComponent implements OnInit, AfterViewInit {
     this.columnDefs[0].cellRenderer = BotonesOpcionComponent;
     this.columnDefs[0].cellRendererParams = {
       clicked: (event: any, type: string) => {
+        console.log('>>>>>>>>>>> SE ENVIA EL PARAMETRO');
         this.pedido = event.data;
         // if(type == 'remove'){
         //   this.removeElement(this.pedido);
@@ -199,15 +204,16 @@ export class TablaComponent implements OnInit, AfterViewInit {
       embarqueDesde: new FormControl(this.inicioDesde),        //b
       embarqueHasta: new FormControl(this.finDesde),     //c
       paisPlanta: new FormControl(null,Validators.required),                            //o
-      representante: new FormControl('TODOS'),         //m
-      cliente: new FormControl('TODOS'),               //d
-      producto: new FormControl(''),              //e
-      naviera: new FormControl('TODOS'),               //n
-      puerto: new FormControl('TODOS'),               //g
-      marca: new FormControl('TODOS'),                 //f
+      representante: new FormControl(this.estados.TODOS),         //m
+      cliente: new FormControl(this.estados.TODOS),               //d
+      codigoProducto: new FormControl(this.estados.TODOS),              //e
+      producto: new FormControl(this.estados.TODOS),              //e
+      naviera: new FormControl(this.estados.TODOS),               //n
+      puerto: new FormControl(this.estados.TODOS),               //g
+      marca: new FormControl(this.estados.TODOS),                 //f
       numeroContenedor: new FormControl(null),    //j
       prefactura: new FormControl(),                            //k
-      destino: new FormControl('TODOS'),               //g
+      destino: new FormControl(this.estados.TODOS),               //g
     });
 
     /** DESHABILITAR FILTROS SELECT */
@@ -217,26 +223,36 @@ export class TablaComponent implements OnInit, AfterViewInit {
     this.filterForm.controls.producto.disable();
     this.filterForm.controls.cliente.disable();
     this.filterForm.controls.marca.disable();
+    this.filterForm.controls.codigoProducto.disable();
+    this.filterForm.controls.numeroContenedor.disable();
+    this.filterForm.controls.prefactura.disable();
+
+    this.cambioProducto = false;
+    this.cambioCodigoProducto = true;
 
     /** CAMBIO DE PAIS */
     this.filterForm.controls.paisPlanta.valueChanges.subscribe((valor)=>{
       const catalogos = [];
-      catalogos.push(this._catalogoSevice.getPuertoPorUsuarioPais(this.estadosCatalogo.ACTIVO, this.usuario, valor));
+      //catalogos.push(this._catalogoSevice.getPuertoPorUsuarioPais(this.estadosCatalogo.ACTIVO, this.usuario, valor));
       catalogos.push(this._catalogoSevice.getRepresentantePorPais(valor));
       catalogos.push(this._catalogoSevice.getNavieraPorPais(this.estadosCatalogo.ACTIVO, this.usuario, valor));
       forkJoin(catalogos).subscribe((result: any[]) => {
-        this.puertos = result[0].return;
-        this.representantes = result[1].return;
-        this.navieras = result[2].return;
+        this.representantes = result[0].return;
+        this.navieras = result[1].return;
         this.filterForm.controls.representante.enable();
         this.filterForm.controls.cliente.enable();
         this.filterForm.controls.producto.enable();
         this.filterForm.controls.naviera.enable();
         this.filterForm.controls.puerto.enable();
         this.filterForm.controls.marca.enable();
+        this.filterForm.controls.codigoProducto.enable();
+        this.filterForm.controls.numeroContenedor.enable();
+        this.filterForm.controls.prefactura.enable();
+        this.pais = true;
       });
 
     });
+
 
     /** CONSULTAR CATALOGOS */
     const catalogos = [];
@@ -245,18 +261,21 @@ export class TablaComponent implements OnInit, AfterViewInit {
     catalogos.push(this._catalogoSevice.getMarcaPorEstado(this.estadosCatalogo.ACTIVO));
     catalogos.push(this._catalogoSevice.getProductoPorEstado(this.estadosCatalogo.ACTIVO));
     catalogos.push(this._catalogoSevice.getPaisesPorUsuario(this.usuario, this.rol));
-    catalogos.push(this._catalogoSevice.getNavieraPorPais(this.estadosCatalogo.ACTIVO, this.usuario, this.pais));
-    catalogos.push(this._catalogoSevice.getPuertoPorUsuarioPais(this.estadosCatalogo.ACTIVO, this.usuario, this.pais));
-    catalogos.push(this._catalogoSevice.getRepresentantePorPais(this.pais));
-    catalogos.push(this._catalogoSevice.getRepresentantePorPais(this.pais));
+    catalogos.push(this._catalogoSevice.getPuertoDestino(this.estados.TODOS));
+
     forkJoin(catalogos).subscribe((result: any[]) => {
       this.clientes = result[0].return;
       this.marcas = result[1].return;
       this.productos = result[2].return;
+      /*this.productos = this.productos.map(x => {
+        x.descripcionEspanol = x.codigo +' ' + x.descripcionEspanol
+        return x;
+      });*/
+      console.log('productos', this.productos);
       this.paises = result[3].return;
-      this.navieras = result[4].return;
-      this.puertos = result[5].return;
-      this.representantes = result[6].return;
+      this.puertos = result[4];
+      this.puertos.sort((a,b) => a.nombre.localeCompare(b.nombre));
+
 
       this.productosFiltrados = this.filterForm.controls['producto'].valueChanges.pipe(
         startWith(''),
@@ -264,7 +283,7 @@ export class TablaComponent implements OnInit, AfterViewInit {
       );
     });
 
-    /** CONSULTAR PROGRAMACION */
+    /** CONSULTAR PROGRAMACION
     let opciones: GetProgramacion = {};
     opciones.porFecha = 'SI';
     opciones.fechaDesde = this.inicioDesde.format('DD/MM/YYYY');// '24/08/2016';
@@ -279,7 +298,7 @@ export class TablaComponent implements OnInit, AfterViewInit {
     this._progService.consultarProgramacion(opciones).subscribe((result: any) => {
       this.pedidosFiltrados = result.return;
       this.spinner = false;
-    });
+    });*/
   }
 
   public actualizarInfo(spinner: any) {
@@ -377,6 +396,9 @@ export class TablaComponent implements OnInit, AfterViewInit {
   }
 
   public aplicarFiltros() {
+
+    this.pedido = null;
+    this.pedidosSeleccionados = [];
     //Iniciar con todos los pedidos
     // this.pedidosFiltrados = this.pedidosTodos;
     // Aplicar filtros
@@ -404,20 +426,21 @@ export class TablaComponent implements OnInit, AfterViewInit {
     let ppCodigo = this.filterForm.controls.paisPlanta.value;
     //filtro Producto
     let prCodigo = this.filterForm.controls.producto.value;
-    let prod = 'TODOS';
-    if (prCodigo != null && prCodigo != '') {
-      let prodCatalogo = this.productos.find(x => x.descripcionEspanol == prCodigo);
+    let prod = this.estados.TODOS.toString();
+    if (prCodigo != this.estados.TODOS && prCodigo != null && prCodigo != '') {
+      let prodCatalogo = this.productos.find(x => x.codigo == prCodigo);
       prod = prodCatalogo.codigo;
     }
 
     let idc = this.util.nullOrEmpty(this.filterForm.controls.numeroContenedor.value) ? '*' : this.filterForm.controls.numeroContenedor.value;
     let rep = this.util.nullOrEmpty(this.filterForm.controls.representante.value) ? '*' : this.filterForm.controls.representante.value;
-    let cli = this.util.nullOrEmpty(this.filterForm.controls.cliente.value) ? 'TODOS' : this.filterForm.controls.cliente.value;
+    let cli = this.util.nullOrEmpty(this.filterForm.controls.cliente.value) ? this.estados.TODOS : this.filterForm.controls.cliente.value;
     let nav = this.util.nullOrEmpty(this.filterForm.controls.naviera.value) ? '*' : this.filterForm.controls.naviera.value;
-    let marca = this.util.nullOrEmpty(this.filterForm.controls.marca.value) ? 'TODOS' : this.filterForm.controls.marca.value;
+    let marca = this.util.nullOrEmpty(this.filterForm.controls.marca.value) ? this.estados.TODOS : this.filterForm.controls.marca.value;
+    let prefactura = this.util.nullOrEmpty(this.filterForm.controls.prefactura.value) ? this.estados.TODOS : this.filterForm.controls.prefactura.value;
+    let destino = this.util.nullOrEmpty(this.filterForm.controls.puerto.value) ? this.estados.TODOS : this.filterForm.controls.puerto.value;
 
     if (this.filterForm.valid) {
-
       /** CONSULTAR PROGRAMACION */
       let opciones: GetProgramacion = {};
       opciones.porFecha = this.filterForm.controls.fechaTentativa.value ? 'SI' : 'NO';
@@ -426,12 +449,14 @@ export class TablaComponent implements OnInit, AfterViewInit {
       opciones.estado = 'EMBARCADO';
       opciones.codigoPais = this.filterForm.controls['paisPlanta'].value;
       opciones.idContenedor = idc;
-      opciones.usuario = 'omoscoso';
+      opciones.usuario = this.usuario;
       opciones.codigoRepresentante = rep;
       opciones.codigoCliente = cli;
       opciones.codigoProducto = prod;
       opciones.codigoNaviera = nav;
       opciones.codigoMarca = marca;
+      opciones.numeroFactura = prefactura;
+      opciones.codigoPuertoDestino = destino;
 
       opciones = this.completarGetProgramacion(opciones);
 
@@ -441,6 +466,7 @@ export class TablaComponent implements OnInit, AfterViewInit {
       this.errorForm = false;
       if(this.estadosFiltrados.length > 0) {
         this.spinner = true;
+        this.errorEstados = false;
         const ar = this.estadosFiltrados.join(";");
         console.log('Todos los estados son: '  + ar);
         opciones.estado = ar;
@@ -480,7 +506,7 @@ export class TablaComponent implements OnInit, AfterViewInit {
     const params = {
       columnGroups: true,
       allColumns: true,
-      fileName: 'Inaexpo',
+      fileName: 'ProgramacionesInaexpo',
       columnKeys: exportable,
     };
     this.gridApi.exportDataAsCsv(params);
@@ -512,10 +538,10 @@ export class TablaComponent implements OnInit, AfterViewInit {
     opciones.porFecha = this.util.nullOrEmpty(opciones.porFecha) ? 'SI' : opciones.porFecha;
     opciones.fechaDesde = this.util.nullOrEmpty(opciones.fechaDesde) ? '01/01/2000' : opciones.fechaDesde;
     opciones.fechaHasta = this.util.nullOrEmpty(opciones.fechaHasta) ? '31/12/2023' : opciones.fechaHasta;
-    opciones.codigoCliente = this.util.nullOrEmpty(opciones.codigoCliente) ? 'TODOS' : opciones.codigoCliente;
-    opciones.codigoProducto = this.util.nullOrEmpty(opciones.codigoProducto) ? 'TODOS' : opciones.codigoProducto;
-    opciones.codigoMarca = this.util.nullOrEmpty(opciones.codigoMarca) ? 'TODOS' : opciones.codigoMarca;
-    opciones.codigoPuertoDestino = this.util.nullOrEmpty(opciones.codigoPuertoDestino) ? 'TODOS' : opciones.codigoPuertoDestino;
+    opciones.codigoCliente = this.util.nullOrEmpty(opciones.codigoCliente) ? this.estados.TODOS : opciones.codigoCliente;
+    opciones.codigoProducto = this.util.nullOrEmpty(opciones.codigoProducto) ? this.estados.TODOS: opciones.codigoProducto;
+    opciones.codigoMarca = this.util.nullOrEmpty(opciones.codigoMarca) ? this.estados.TODOS : opciones.codigoMarca;
+    opciones.codigoPuertoDestino = this.util.nullOrEmpty(opciones.codigoPuertoDestino) ? this.estados.TODOS : opciones.codigoPuertoDestino;
     opciones.numeroConsecutivo = this.util.nullOrEmpty(opciones.numeroConsecutivo) ? '*' : opciones.numeroConsecutivo;
     opciones.codigoProforma = this.util.nullOrEmpty(opciones.codigoProforma) ? '*' : opciones.codigoProforma;
     opciones.idContenedor = this.util.nullOrEmpty(opciones.idContenedor) ? '*' : '*' + opciones.idContenedor + '*';

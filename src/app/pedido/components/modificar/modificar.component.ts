@@ -91,7 +91,7 @@ export class ModificarComponent implements OnInit, OnChanges {
       this.editForm.reset();
     }
     this.seleccionados.forEach(x => this.ids.push(x.codigoDetalleProgramacion));
-    if ((changes.pedido && !changes.pedido.firstChange) || (changes.seleccionados && !changes.seleccionados.firstChange)) {
+    if ((changes.pedido && !changes.pedido.firstChange) || (changes.seleccionados && changes.seleccionados.currentValue.length > 0 && !changes.seleccionados.firstChange)) {
 
       this.mostrarFormulario = true;
       this.errorEstados = false;
@@ -101,8 +101,10 @@ export class ModificarComponent implements OnInit, OnChanges {
       }else{
         if(changes.seleccionados.currentValue.length == 1){
           this.pedido = changes.seleccionados.currentValue[0];
-        }else{
+        }else if(changes.pedido.currentValue){
           this.pedido = changes.pedido.currentValue;
+        } else{
+          return;
         }
       }
       let puerto:any = this.puertos.find(x => x.codigo == this.pedido.codigoPuertoOrigen);
@@ -125,7 +127,7 @@ export class ModificarComponent implements OnInit, OnChanges {
       }
 
       /* ASIGNACION DE INFORMACIÓN AL FORMULARIO */
-      this.editForm.controls.contenedor.setValue(this.pedido.numeroContenedor);
+      this.editForm.controls.contenedor.setValue(this.pedido.identificadorContenedor);
       this.editForm.controls.sello.setValue(this.pedido.numeroSello);
       this.editForm.controls.bl.setValue(this.pedido.numeroBL);
       if(this.pedido.estadoDetalle == 'ON HOLD'){
@@ -217,6 +219,7 @@ export class ModificarComponent implements OnInit, OnChanges {
           this.actualiarMultiple(indices);
         }
       }else {
+        console.log(this.pedido);
         this.simple = {
           codigoDetalleProgramacion: parseInt(this.pedido.codigoDetalleProgramacion),
           numeroFacturaBaan: this.editForm.controls.prefactura.value,
@@ -225,7 +228,7 @@ export class ModificarComponent implements OnInit, OnChanges {
           estado: this.editForm.controls.estado.value ? 'ON HOLD' : this.pedido.estadoDetalle,
           nombreBuque: this.editForm.controls.buque.value,
           comentariosInaexpo: this.editForm.controls.comentarios.value,
-          numeroContenedor: this.editForm.controls.contenedor.value,
+          numeroContenedor: parseInt(this.pedido.numeroContenedor),
           numeroSellos: this.editForm.controls.sello.value,
           numeroBL: this.editForm.controls.bl.value,
           valorFlete: this.editForm.controls.fleteTerrestre.value,
@@ -265,7 +268,7 @@ export class ModificarComponent implements OnInit, OnChanges {
                 showConfirmButton: true,
                 showDenyButton: false,
               }).then(()=>{
-                
+
                 this.aplicarFiltros.emit();
               });
               break;
@@ -297,7 +300,7 @@ export class ModificarComponent implements OnInit, OnChanges {
           if(result.return != 0){
             Swal.fire({
               icon: 'error',
-              title: 'Existió un error',
+              title: '´No se puede modificar',
               text: msgText,
               confirmButtonText: 'Entiendo!',
               confirmButtonColor: '#224668'
@@ -325,7 +328,7 @@ export class ModificarComponent implements OnInit, OnChanges {
       estado: this.editForm.controls.estado.value ? 'ON HOLD' : this.seleccionados[0].estadoProgramacion,
       nombreBuque: this.editForm.controls.buque.value,
       comentariosInaexpo: this.editForm.controls.comentarios.value,
-      numeroContenedor: this.editForm.controls.contenedor.value,
+      numeroContenedor: parseInt(this.pedido.numeroContenedor),// this.editForm.controls.contenedor.value,
       numeroSellos: this.editForm.controls.sello.value,
       numeroBL: this.editForm.controls.bl.value,
       valorFlete: this.editForm.controls.fleteTerrestre.value,
@@ -387,7 +390,7 @@ export class ModificarComponent implements OnInit, OnChanges {
         if(result.return != 0){
           Swal.fire({
             icon: 'error',
-            title: 'Existió un error',
+            title: 'No se puede modificar',
             text: msgText,
             confirmButtonText: 'Entiendo!',
             confirmButtonColor: '#224668'
@@ -400,7 +403,7 @@ export class ModificarComponent implements OnInit, OnChanges {
   }
 
   public factura():void{
-    // this._programacionService.mostrarFactura(this.pedido.numeroFacturaBaan,this.pedido.fechaTentativaEmbarque, this.pedido.numeroFacturaBaan,this.pedido.descripcionFormaPago);
+    this.actualizarInfo.emit(true);
     this._programacionService.mostrarFactura(this.pedido.numeroFacturaBaan,this.pedido.fechaTentativaEmbarque,'','0')
       .subscribe((rsp: any) => {
         let fileName = 'Factura-Aduana'+this.pedido.numeroFacturaBaan+'.xlsx';
@@ -409,6 +412,7 @@ export class ModificarComponent implements OnInit, OnChanges {
         a.download = fileName;
         a.href = window.URL.createObjectURL(blob);
         a.click();
+        this.actualizarInfo.emit(false);
       });
   }
 

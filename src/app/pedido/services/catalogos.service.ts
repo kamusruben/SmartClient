@@ -57,6 +57,10 @@ export class CatalogosService {
     const url = `${this.url}generic?code=pais`;
     return this.http.get(url);
   }
+  getPuertoDestino(naviera: string){
+    const url = `${this.url}programacion/puertosDestinos/?c=${naviera}`;
+    return this.http.get(url);
+  }
 
   /**
    * MOCKUPS

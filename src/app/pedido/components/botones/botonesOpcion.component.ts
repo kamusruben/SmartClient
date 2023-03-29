@@ -3,6 +3,7 @@ import {ICellRendererAngularComp} from "ag-grid-angular";
 import Swal from 'sweetalert2';
 import {ProgramacionService} from "../../services/programacion.service";
 import {finalize} from "rxjs/operators";
+import {Programacion} from "../../../util/custom-data-types/pedido";
 
 @Component({
   selector: 'btn-trash',
@@ -27,15 +28,10 @@ export class BotonesOpcionComponent implements ICellRendererAngularComp {
   }
 
   removeHandler(event: any) {
-    console.log('event');
-    console.log(event);
-    console.log(this.params);
-    console.log('Se envia: ');
-    console.log(this.params.data.codigoProgramacion);
     this._programacionService.validarBorrado(this.params.data.codigoProgramacion).subscribe((rsp)=>{
       if(rsp){
         Swal.fire({
-          title: '¿Está seguro de eliminar este regisrto?',
+          title: '¿Está seguro de eliminar este registro?',
           showDenyButton: true,
           showCancelButton: false,
           confirmButtonText: 'Confirmar',
@@ -46,6 +42,7 @@ export class BotonesOpcionComponent implements ICellRendererAngularComp {
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
+            const spinner = document.getElementById('spinner').classList.remove('d-none');
             // Swal.fire('Saved!', '', 'success')
             //this.params.clicked(this.params, 'remove')
             // this._programacionService.borrarDetalle(this.params.data.codigoProgramacion)
@@ -56,6 +53,9 @@ export class BotonesOpcionComponent implements ICellRendererAngularComp {
                   title: 'Registro eliminado con éxito',
                   confirmButtonText: 'Listo!',
                   confirmButtonColor: '#224668'
+                }).then(()=>{
+                  const spinner = document.getElementById('spinner').classList.add('d-none');
+                  document.getElementById('aplicarFiltros').click();
                 });
               });
           } else if (result.isDenied) {
